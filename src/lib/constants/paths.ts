@@ -1,0 +1,19 @@
+export const PATHS = {
+    SSO_CALLBACK: "/sso-callback",
+    SIGN_IN: "/sign-in",
+    SIGN_UP: "/sign-up",
+    FORGOT_PASSWORD: "/forgot-password",
+    ONBOARDING: "/onboarding",
+    SETUP_BUSINESS: "/setup-business",
+    LANDING: "/",
+    HOME: "/",
+    INVENTORY: "/inventory",
+    SALES: "/sales",
+    CUSTOMERS: "/customers",
+    CUSTOMER_DETAILS: "/customers/:id",
+    ANALYTICS: "/analytics",
+    SETTINGS: "/settings",
+    WILDCARD: "*",
+    DASHBOARD: "/dashboard",
+
+}

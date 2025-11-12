@@ -1,0 +1,82 @@
+import EmptyIcon from "@/assets/icons/empty.svg?react";
+import BrainstormDialog from "@/components/custom/brainstorm-dialog";
+import { ImportModal } from "@/components/custom/import-modal";
+import SearchInput from "@/components/custom/input-search";
+import { ProductModal } from "@/components/custom/product-modal";
+import { ProductTable } from "@/components/custom/product-table";
+import { Button } from "@/components/ui/button";
+import useAPIQuery from "@/hooks/use-api-query";
+import { mainClient } from "@/lib/axios";
+import { API_ENDPOINTS } from "@/lib/constants";
+import { useProductStore } from "@/lib/stores/product";
+import { delayDebounceFn } from "@/lib/utils";
+import { Upload } from "lucide-react";
+import { useEffect } from "react";
+
+export default function InventoryPage() {
+    const { products, setProducts } = useProductStore();
+    const { query, setQuery, setPagination } = useAPIQuery()
+
+    const fetchData = async () => {
+        const r = await mainClient.get(API_ENDPOINTS.Products.Base, {
+            params: query
+        });
+        if (r.data.result.items) {
+            setProducts(r.data.result.items)
+            setPagination({
+                total: r.data.result.totalPages,
+                currentPage: r.data.result.currentPage,
+            });
+        }
+    }
+
+
+    useEffect(() => {
+        if (query.search.length) {
+            const delayDebounce = delayDebounceFn(fetchData);
+            return () => clearTimeout(delayDebounce);
+        } else if (query.page) {
+            fetchData()
+        }
+    }, [query.search]);
+
+    return (
+        <div className="p-10">
+            <div className="flex justify-between items-center mb-4">
+                <div>
+                    <h4 className="text-xl font-semibold">Inventory Management</h4>
+                    <p>Here's what's happening with your business.</p>
+                </div>
+                <div className="flex gap-2">
+                    <ProductModal />
+                    <ImportModal type={'Products'}/>
+                    <BrainstormDialog outlined />
+                </div>
+            </div>
+            {products.length ? (
+                <>
+                    <div className="mb-4 flex justify-end">
+                        <SearchInput
+                            value={query.search}
+                            onValueChange={v => setQuery({ search: v })}
+                        />
+                    </div>
+                    <ProductTable products={products} />
+                </>
+            ) : (
+                <div className="bg-white rounded p-3 py-10 flex flex-col gap-4 justify-center items-center text-center mb-4">
+                    <EmptyIcon />
+                    <div>Let’s stock your store</div>
+                    <div>Use our structured template to import products in bulk</div>
+                    <div className="flex gap-2">
+                        <Button>
+                            <Upload />
+                            <span>Import Product</span>
+                        </Button>
+                        <Button variant={'outline'}>Download Template</Button>
+                    </div>
+                </div>
+            )}
+        </div>
+    )
+}
