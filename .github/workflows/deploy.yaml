@@ -1,0 +1,98 @@
+name: 🚀 Deploy Frontend to S3 Bucket
+run-name: ${{ github.workflow }} – ${{ github.head_ref }} ${{ format('[{0}]', inputs.environment || github.event_name) }}
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to deploy to
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - prod
+      version:
+        description: "Commit SHA, branch or tag to deploy"
+        type: string
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.setenv.outputs.environment }}
+      version: ${{ steps.setenv.outputs.version }}
+    steps:
+      - name: Determine environment and version
+        id: setenv
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "environment=dev" >> $GITHUB_OUTPUT
+            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "environment=unknown" >> $GITHUB_OUTPUT
+            echo "version=unknown" >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    needs: prepare
+    runs-on: ubuntu-latest
+    name: Deploying ${{ needs.prepare.outputs.version }} to environment ${{ needs.prepare.outputs.environment }}
+    environment:
+      name: ${{ needs.prepare.outputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.version || github.ref_name }}
+
+      - name: "Create env file"
+        run: |
+          if [ "${{ needs.prepare.outputs.environment }}" == "dev" ]; then
+            echo "${{ secrets.DEV_ENV }}" > .env
+          elif [ "${{ needs.prepare.outputs.environment }}" == "prod" ]; then
+            echo "${{ secrets.PROD_ENV }}" > .env
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Load .env into GitHub Actions environment
+        run: |
+          grep -v '^#' .env >> $GITHUB_ENV
+
+      - name: Build the project
+        env:
+          VITE_BASE_API_ENDPOINT: ${{ env.VITE_BASE_API_ENDPOINT }}
+          VITE_BASE_WEBSOCKET_ENDPOINT: ${{ env.VITE_BASE_WEBSOCKET_ENDPOINT }}
+          VITE_GOOGLE_CLIENT_ID: ${{ env.VITE_GOOGLE_CLIENT_ID }}
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Sync files to S3
+        run: aws s3 sync ./dist s3://inscend-ui-${{ needs.prepare.outputs.environment }} --delete
