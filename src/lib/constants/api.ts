@@ -50,7 +50,7 @@ export const API_ENDPOINTS = {
     },
     Brainstorm: {
         Chat: `${BASE_API_ENDPOINT}/brainstorm/chat`,
-        ExternalChat: `http://54.160.149.176:8001/chat/brainstorm`,
+        ExternalChat: `https://ai-dev.inscend.io/chat/brainstorm`,
     },
     Analytics: {
         Dashboard: `${BASE_API_ENDPOINT}/analytics/dashboard`,

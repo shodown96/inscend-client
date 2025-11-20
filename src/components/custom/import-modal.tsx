@@ -104,7 +104,7 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
       if (selectedFile.type.includes("pdf")) {
         path = "image/extract-pdf"
       }
-      const result = await multipartClient.post(`http://54.160.149.176:8001/${path}`, values, {
+      const result = await multipartClient.post(`https://ai-dev.inscend.io/${path}`, values, {
         onUploadProgress: (progressEvent) => {
           if (!progressEvent.total) return
           const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
