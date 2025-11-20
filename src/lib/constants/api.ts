@@ -53,7 +53,7 @@ export const API_ENDPOINTS = {
         ExternalChat: `https://ai-dev.inscend.io/chat/brainstorm`,
     },
     Analytics: {
-        Dashboard: `${BASE_API_ENDPOINT}/analytics/dashboard`,
+        ActionBoardMetrics: `${BASE_API_ENDPOINT}/analytics/action-board`,
         GetBusinessData: `${BASE_API_ENDPOINT}/analytics/get-business-data`,
         SalesTotal: `${BASE_API_ENDPOINT}/analytics/sales-total`,
         OrderStatuses: `${BASE_API_ENDPOINT}/analytics/order-statuses`,

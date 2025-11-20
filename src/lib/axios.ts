@@ -21,7 +21,7 @@ class AxiosClient {
   constructor({ baseURL = "", multipart = false, extraHeaders = {} }: ClientOptions = {}) {
     this.instance = axios.create({
       baseURL,
-      timeout: 30000,
+      timeout: 60000,
       withCredentials: true,
       headers: {
         "Content-Type": multipart ? "multipart/form-data" : "application/json",
