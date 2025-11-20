@@ -20,7 +20,7 @@ const views = [
     "Action card",
     "Overview",
 ]
-export default function DashboardPage() {
+export default function ActionBoardPage() {
     const { user } = useAuthStore()
     const { products, setProducts } = useProductStore()
     const [view, setView] = useState(views[1])

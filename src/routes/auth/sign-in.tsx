@@ -23,7 +23,7 @@ export default function SignInPage() {
         setTokens({
           accessToken: result.data.result.accessToken
         });
-        const PATH = searchParams.get("nextURL") || PATHS.DASHBOARD
+        const PATH = searchParams.get("nextURL") || PATHS.ACTION_BOARD
         navigate(PATH);
       } else {
         toast.error(result.data.message)

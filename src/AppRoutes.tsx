@@ -13,7 +13,7 @@ import Home from "./routes/home";
 import { PATHS } from "./lib/constants";
 import Analytics from "./routes/main/analytics";
 import Customers from "./routes/main/customers";
-import Dashboard from "./routes/main/dashboard";
+import ActionBoardPage from "./routes/main/action-board";
 import Inventory from "./routes/main/inventory";
 import Sales from "./routes/main/sales";
 import Settings from "./routes/main/settings";
@@ -37,7 +37,7 @@ export default function AppRoutes() {
 
                 {/* Main */}
                 <Route element={<MainLayout />}>
-                    <Route path={PATHS.DASHBOARD} element={<Dashboard />} />
+                    <Route path={PATHS.ACTION_BOARD} element={<ActionBoardPage />} />
                     <Route path={PATHS.INVENTORY} element={<Inventory />} />
                     <Route path={PATHS.SALES} element={<Sales />} />
                     <Route path={PATHS.CUSTOMERS} element={<Customers />} />

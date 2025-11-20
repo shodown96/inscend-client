@@ -1,6 +1,10 @@
+import type { Customer } from "@/types/customer";
+import type { Product } from "@/types/product";
+import type { Sale } from "@/types/sales";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+export type ViewType = 'chat' | 'history'
 export interface Message {
     id: string;
     role: 'user' | 'assistant';
@@ -21,15 +25,21 @@ interface ChatStore {
     chatHistory: ChatSession[];
     currentSessionId: string | null;
     isLoading: boolean;
-    selected: string;
+    selectedArea: string;
+    businessData: {
+        products: Product[]
+        sales: Sale[]
+        customers: Customer[]
+    } | null
 
     // Actions
-    setCurrentMessages: (messages: Message[]) => void;
+    setBusinessData: (businessData: ChatStore['businessData']) => void,
+    setCurrentMessages: (messages: any[]) => void;
     addMessage: (message: Message) => void;
     setChatHistory: (history: ChatSession[]) => void;
     setCurrentSessionId: (id: string | null) => void;
     setIsLoading: (loading: boolean) => void;
-    setSelected: (value: string) => void;
+    setSelectedArea: (value: string) => void;
     resetChat: () => void;
 }
 
@@ -40,8 +50,10 @@ export const useBrainstormStore = create<ChatStore>()(
             chatHistory: [],
             currentSessionId: null,
             isLoading: false,
-            selected: "Action Board",
+            selectedArea: "Action Board",
+            businessData: null,
 
+            setBusinessData: (businessData) => set({ businessData }),
             setCurrentMessages: (messages) => set({ currentMessages: messages }),
             addMessage: (message) =>
                 set((state) => ({
@@ -50,18 +62,18 @@ export const useBrainstormStore = create<ChatStore>()(
             setChatHistory: (history) => set({ chatHistory: history }),
             setCurrentSessionId: (id) => set({ currentSessionId: id }),
             setIsLoading: (loading) => set({ isLoading: loading }),
-            setSelected: (value) => set({ selected: value }),
+            setSelectedArea: (value) => set({ selectedArea: value }),
             resetChat: () =>
                 set({
                     currentMessages: [],
                     chatHistory: [],
                     currentSessionId: null,
                     isLoading: false,
-                    selected: "Action Board",
+                    selectedArea: "Action Board",
                 }),
         }),
         {
-            name: "chat-store",
+            name: "brainstorm-store",
             storage: createJSONStorage(() => sessionStorage),
         }
     )

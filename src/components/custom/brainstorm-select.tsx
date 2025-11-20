@@ -42,7 +42,7 @@ export default function BrainstormSelect() {
   const [open, setOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { selected, setSelected } = useBrainstormStore();
+  const { selectedArea, setSelectedArea } = useBrainstormStore();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function BrainstormSelect() {
     if (hasChildren) {
       setExpandedIndex(expandedIndex === index ? null : index);
     } else {
-      setSelected(title);
+      setSelectedArea(title);
       setOpen(false);
     }
   };
@@ -71,7 +71,7 @@ export default function BrainstormSelect() {
         className="flex items-center gap-2 rounded-lg px-3 py-2 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700"
       >
         <span className="font-semibold text-gray-800">
-          {selected || "Select a category"}
+          {selectedArea || "Select a category"}
         </span>
         <ChevronDown className="w-4 h-4 text-gray-500" />
       </button>
@@ -109,7 +109,7 @@ export default function BrainstormSelect() {
                         <li
                           key={item}
                           onClick={() => {
-                            setSelected(item);
+                            setSelectedArea(item);
                             setOpen(false);
                           }}
                           className="px-2 py-1 rounded-md cursor-pointer hover:bg-gray-50"

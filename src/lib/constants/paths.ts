@@ -14,6 +14,6 @@ export const PATHS = {
     ANALYTICS: "/analytics",
     SETTINGS: "/settings",
     WILDCARD: "*",
-    DASHBOARD: "/dashboard",
+    ACTION_BOARD: "/action-board",
 
 }

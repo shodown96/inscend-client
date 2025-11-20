@@ -56,3 +56,6 @@ export const getInitials = (name = "") => {
 
 export const delayDebounceFn = (callBack: () => void) =>
   setTimeout(callBack, 300);
+
+export const determineBusinessCategory = (type: string) =>
+  type === "Service" ? "U1" : "U2";

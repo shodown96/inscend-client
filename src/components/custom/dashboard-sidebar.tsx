@@ -17,7 +17,7 @@ export default function DashboardSidebar({ }) {
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const routes = [
-        { name: "Dashboard", path: PATHS.DASHBOARD, icon: DashboardIcon },
+        { name: "Action Board", path: PATHS.ACTION_BOARD, icon: DashboardIcon },
         { name: "Inventory", path: PATHS.INVENTORY, icon: InventoryIcon },
         { name: "Sales", path: PATHS.SALES, icon: SalesIcon },
         { name: "Customers", path: PATHS.CUSTOMERS, icon: CustomerIcon },

@@ -11,7 +11,6 @@ import { mainClient } from "@/lib/axios";
 import { API_ENDPOINTS } from "@/lib/constants";
 import { useCustomerStore } from "@/lib/stores/customer";
 import { delayDebounceFn } from "@/lib/utils";
-import { Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function CustomersPage() {
@@ -108,10 +107,7 @@ export default function CustomersPage() {
                     <div>Let’s stock your store</div>
                     <div>Use our structured template to import products in bulk</div>
                     <div className="flex gap-2">
-                        <Button>
-                            <Upload />
-                            <span>Import Product</span>
-                        </Button>
+                        <ImportModal type="Customers" />
                         <Button variant={'outline'}>Download Template</Button>
                     </div>
                 </div>

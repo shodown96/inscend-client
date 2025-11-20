@@ -47,7 +47,7 @@ export default function SSOCallbackPage() {
                     navigate(PATHS.SETUP_BUSINESS);
                     return
                 }
-                navigate(PATHS.DASHBOARD);
+                navigate(PATHS.ACTION_BOARD);
             }
         } catch (err: any) {
             if (err?.response?.data.message) {
