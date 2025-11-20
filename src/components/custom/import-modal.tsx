@@ -118,9 +118,7 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
         console.log(extractedData)
         toast.success(result.data.message)
         const mappedResult = await mainClient.post(API_ENDPOINTS?.[type].AddImported,
-          extractedData.map((v: any) => ({ ...v, businessId: user?.businessId })), {
-          timeout: 30000
-        })
+          extractedData.map((v: any) => ({ ...v, businessId: user?.businessId })))
         if (mappedResult.status === 200) {
           const response = await mainClient.get(API_ENDPOINTS?.[type].Base)
 
