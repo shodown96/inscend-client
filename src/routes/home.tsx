@@ -1,12 +1,12 @@
 import { PATHS } from "@/lib/constants";
-// import { Link } from "react-router";
+import { useAuthStore } from "@/lib/stores/auth";
 import { Navigate } from "react-router";
 
 export default function Home() {
-  return <Navigate to={PATHS.SIGN_IN} />
-  // return (
-  //   <div className="p-10 text-lg font-semibold">
-  //     Home Page | <Link to={PATHS.SIGN_IN}>Sign In</Link>
-  //   </div>
-  // );
+  const { user } = useAuthStore()
+  if (user) {
+    return <Navigate to={PATHS.SIGN_IN} />
+  } else {
+    return <Navigate to={PATHS.ACTION_BOARD} />
+  }
 }

@@ -20,7 +20,10 @@ import { toast } from "sonner"
 import { CustomSelect } from "./custom-select"
 import { useProductStore } from "@/lib/stores/product"
 
-export function ProductModal({ buttonText = "Add Product" }) {
+export function ProductModal({ buttonText = "Add Product", onFormSubmit = () => { } }: {
+  buttonText?: string,
+  onFormSubmit?: () => void
+}) {
   const closeRef = useRef<any>(null)
   const { setProducts } = useProductStore()
   const formik = useFormik<ProductParamsType>({
@@ -41,13 +44,13 @@ export function ProductModal({ buttonText = "Add Product" }) {
         await mainClient.get(API_ENDPOINTS.Products.Base)
           .then(r => {
             setProducts(r.data.result.items)
+            onFormSubmit()
           })
         closeRef.current?.click()
         formik.resetForm()
       }
     },
     validateOnBlur: true,
-    isInitialValid: false,
     validationSchema: ProductParamsSchema,
   });
 

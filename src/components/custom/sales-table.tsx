@@ -263,17 +263,17 @@ export const SalesTable = ({ sales }: { sales: Sale[] }) => {
                                     </div>
                                 </td>
                                 <td className="px-4 py-4">
-                                    <div className="flex items-center">
+                                    <div className="flex items-center gap-2">
                                         {sale.customer ? (
                                             <>
                                                 {sale.customer?.avatar ? (
                                                     <img
                                                         src={sale.customer.avatar.url}
                                                         alt={sale.customer.name}
-                                                        className="size-8 rounded-full mr-2"
+                                                        className="size-7 rounded-full mr-2"
                                                     />
                                                 ) : (
-                                                    <div className="bg-primary text-white rounded-full size-8 flex justify-center items-center text-sm">
+                                                    <div className="bg-primary text-white rounded-full size-7 flex justify-center items-center text-sm">
                                                         {getInitials(sale.customer?.name)}
                                                     </div>
                                                 )}

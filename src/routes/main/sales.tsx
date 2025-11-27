@@ -65,7 +65,7 @@ export default function SalesPage() {
                     <p>Track and manage your sales transactions</p>
                 </div>
                 <div className="flex gap-2">
-                    <SalesModal />
+                    <SalesModal onFormSubmit={fetchMetrics}/>
                     <ImportModal type="Sales" />
                     <BrainstormDialog outlined />
                 </div>

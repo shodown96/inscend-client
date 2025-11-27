@@ -5,16 +5,16 @@ import { formatString } from "@/lib/utils";
 
 const SaleParams = z.object({
     productId: z
-        .string({ error: formatString(VALIDATION_MESSAGES.Required, "Business Name") }),
+        .string({ error: formatString(VALIDATION_MESSAGES.Required, "Product ID") }),
     customerId: z
-        .string({ error: formatString(VALIDATION_MESSAGES.Required, "Business Name") }).optional(),
+        .string({ error: formatString(VALIDATION_MESSAGES.Required, "Customer ID") }).optional(),
     quantity: z
-        .number({ error: formatString(VALIDATION_MESSAGES.Required, "Business Name") }),
+        .number({ error: formatString(VALIDATION_MESSAGES.Required, "Quantity") }),
     paymentMethod: z.string({
-        error: formatString(VALIDATION_MESSAGES.Required, "Business Type"),
+        error: formatString(VALIDATION_MESSAGES.Required, "Payment Method"),
     }),
     unitPrice: z.number({
-        error: formatString(VALIDATION_MESSAGES.Required, "Business Type"),
+        error: formatString(VALIDATION_MESSAGES.Required, "Unit Price"),
     }),
     notes: z.string().optional(),
 });

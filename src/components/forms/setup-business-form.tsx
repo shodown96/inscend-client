@@ -18,7 +18,6 @@ export default function SetupBusinessForm({ onFormSubmit }: SetupBusinessFormPro
         },
         onSubmit: onFormSubmit,
         validateOnBlur: true,
-        isInitialValid: false,
         validationSchema: SetupBusinessParamsSchema,
     });
 

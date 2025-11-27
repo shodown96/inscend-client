@@ -13,17 +13,17 @@ import { Input } from "@/components/ui/input"
 import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS, PAYMENT_METHODS } from "@/lib/constants"
 import { useSalesStore } from "@/lib/stores/sale"
+import { delayDebounceFn } from "@/lib/utils"
 import { SaleParamsSchema, type SaleParamsType } from "@/lib/validations/sale"
+import type { Product } from "@/types/product"
 import { useFormik } from "formik"
 import { Plus } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
-import { CustomSelect } from "./custom-select"
 import { Textarea } from "../ui/textarea"
-import { delayDebounceFn } from "@/lib/utils"
-import type { Product } from "@/types/product"
+import { CustomSelect } from "./custom-select"
 
-export function SalesModal() {
+export function SalesModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => void }) {
   const closeRef = useRef<any>(null)
   const { setSales } = useSalesStore()
   const [products, setProducts] = useState<Product[]>([])
@@ -64,13 +64,13 @@ export function SalesModal() {
         await mainClient.get(API_ENDPOINTS.Sales.Base)
           .then(r => {
             setSales(r.data.result.items)
+            onFormSubmit()
           })
         closeRef.current?.click()
         formik.resetForm()
       }
     },
     validateOnBlur: true,
-    isInitialValid: false,
     validationSchema: SaleParamsSchema,
   });
 

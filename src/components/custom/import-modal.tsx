@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -236,10 +237,10 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
 
         {/* Actions */}
         <div className="flex justify-end gap-2">
+          <DialogClose ref={closeRef}/>
           <Button
             variant="outline"
             onClick={() => closeRef.current?.click()}
-            ref={closeRef}
           >
             Cancel
           </Button>

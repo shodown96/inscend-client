@@ -22,6 +22,8 @@ interface Actions {
     setIsCreateModalOpen: (opened: boolean) => void
     setIsEditModalOpen: (opened: boolean) => void
     setIsDeleteModalOpen: (opened: boolean) => void
+
+    resetStore: () => void
 }
 
 export const useSalesStore = create(
@@ -42,6 +44,16 @@ export const useSalesStore = create(
             setIsCreateModalOpen: (opened) => set({ isCreateModalOpen: opened }),
             setIsEditModalOpen: (opened) => set({ isEditModalOpen: opened }),
             setIsDeleteModalOpen: (opened) => set({ isDeleteModalOpen: opened }),
+
+            resetStore: () => {
+                set({
+                    sales: [],
+                    selectedSale: null,
+                    isCreateModalOpen: false,
+                    isEditModalOpen: false,
+                    isDeleteModalOpen: false,
+                })
+            }
         }),
         {
             name: 'sale-storage',

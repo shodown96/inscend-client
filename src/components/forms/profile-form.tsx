@@ -24,7 +24,6 @@ export default function ProfileForm({ onFormSubmit }: SignInFormProps) {
         },
         onSubmit: onFormSubmit,
         validateOnBlur: true,
-        isInitialValid: false,
         validationSchema: ProfileParamsSchema,
     });
 

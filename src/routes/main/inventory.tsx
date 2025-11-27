@@ -10,7 +10,6 @@ import { mainClient } from "@/lib/axios";
 import { API_ENDPOINTS } from "@/lib/constants";
 import { useProductStore } from "@/lib/stores/product";
 import { delayDebounceFn } from "@/lib/utils";
-import { Upload } from "lucide-react";
 import { useEffect } from "react";
 
 export default function InventoryPage() {
@@ -49,7 +48,7 @@ export default function InventoryPage() {
                 </div>
                 <div className="flex gap-2">
                     <ProductModal />
-                    <ImportModal type={'Products'}/>
+                    <ImportModal type={'Products'} />
                     <BrainstormDialog outlined />
                 </div>
             </div>
@@ -69,10 +68,8 @@ export default function InventoryPage() {
                     <div>Let’s stock your store</div>
                     <div>Use our structured template to import products in bulk</div>
                     <div className="flex gap-2">
-                        <Button>
-                            <Upload />
-                            <span>Import Product</span>
-                        </Button>
+
+                        <ImportModal type={'Products'} />
                         <Button variant={'outline'}>Download Template</Button>
                     </div>
                 </div>

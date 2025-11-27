@@ -61,6 +61,7 @@ export const API_ENDPOINTS = {
         Customers: `${BASE_API_ENDPOINT}/analytics/customers`,
         Orders: `${BASE_API_ENDPOINT}/analytics/orders`,
         AvgRevenue: `${BASE_API_ENDPOINT}/analytics/avg-revenue`,
-        SalesDistribution: `${BASE_API_ENDPOINT}/analytics/sales-distribution`
+        SalesDistribution: `${BASE_API_ENDPOINT}/analytics/sales-distribution`,
+        ActionCards: `${BASE_API_ENDPOINT}/analytics/action-cards`
     },
 }

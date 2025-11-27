@@ -41,6 +41,7 @@ interface ChatStore {
     setIsLoading: (loading: boolean) => void;
     setSelectedArea: (value: string) => void;
     resetChat: () => void;
+    resetStore: () => void,
 }
 
 export const useBrainstormStore = create<ChatStore>()(
@@ -71,6 +72,16 @@ export const useBrainstormStore = create<ChatStore>()(
                     isLoading: false,
                     selectedArea: "Action Board",
                 }),
+            resetStore: () => {
+                set({
+                    currentMessages: [],
+                    chatHistory: [],
+                    currentSessionId: null,
+                    isLoading: false,
+                    selectedArea: "Action Board",
+                    businessData: null,
+                })
+            }
         }),
         {
             name: "brainstorm-store",

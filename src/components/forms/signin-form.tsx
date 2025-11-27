@@ -38,7 +38,6 @@ export default function SignInForm({ onFormSubmit }: SignInFormProps) {
             }
         },
         validateOnBlur: true,
-        isInitialValid: false,
         validationSchema: SignInParamsSchema,
     });
 

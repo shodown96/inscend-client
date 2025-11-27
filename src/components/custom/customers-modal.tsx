@@ -20,7 +20,7 @@ import { useRef } from "react"
 import { toast } from "sonner"
 import { Textarea } from "../ui/textarea"
 
-export function CustomersModal() {
+export function CustomersModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => void }) {
   const closeRef = useRef<any>(null)
   const { setCustomers } = useCustomerStore()
 
@@ -42,13 +42,13 @@ export function CustomersModal() {
         await mainClient.get(API_ENDPOINTS.Customers.Base)
           .then(r => {
             setCustomers(r.data.result.items)
+            onFormSubmit()
           })
         closeRef.current?.click()
         formik.resetForm()
       }
     },
     validateOnBlur: true,
-    isInitialValid: false,
     validationSchema: CustomerParamsSchema,
   });
 

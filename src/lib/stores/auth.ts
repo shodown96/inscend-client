@@ -5,6 +5,11 @@ import { toast } from 'sonner';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { API_ENDPOINTS } from '../constants/api';
+import { useActionBoardStore } from './action-board';
+import { useBrainstormStore } from './brainstorm';
+import { useCustomerStore } from './customer';
+import { useProductStore } from './product';
+import { useSalesStore } from './sale';
 
 interface Tokens {
     accessToken: string | null
@@ -26,6 +31,7 @@ interface Actions {
     signOut: () => Promise<void>
     fetchUser: () => Promise<User | void>
     setResetPasswordParams: (resetPasswordParams: ResetPasswordParams) => void,
+    resetStore: () => void,
 }
 
 export const useAuthStore = create(
@@ -60,7 +66,12 @@ export const useAuthStore = create(
                 } catch (err: any) {
                     toast.error(err.response?.data?.message || "Failed to sign out");
                 } finally {
-                    set({ loading: false })
+                    get().resetStore()
+                    useActionBoardStore.getState().resetStore()
+                    useBrainstormStore.getState().resetStore()
+                    useCustomerStore.getState().resetStore()
+                    useProductStore.getState().resetStore()
+                    useSalesStore.getState().resetStore()
                 }
             },
             fetchUser: async () => {
@@ -75,6 +86,15 @@ export const useAuthStore = create(
                 } finally {
                     set({ loading: false })
                 }
+            },
+            resetStore: () => {
+                set({
+                    user: null,
+                    tokens: null,
+                    resetPasswordParams: {},
+                    isAuthenticated: !!get()?.user,
+                    loading: false,
+                })
             }
         }),
         {
