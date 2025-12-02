@@ -13,6 +13,7 @@ import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS, PATHS } from "@/lib/constants"
 import { useActionBoardStore } from "@/lib/stores/action-board"
 import { useAuthStore } from "@/lib/stores/auth"
+import { useBusinessDataStore } from "@/lib/stores/business"
 import { useProductStore } from "@/lib/stores/product"
 import type { GenerateActionCardResult } from "@/types/action-board"
 import { ArrowRight } from "lucide-react"
@@ -27,8 +28,10 @@ const views: ViewType[] = [
 
 export default function ActionBoardPage() {
     const hasRun = useRef(false)
+    const hasRun1 = useRef(false)
     const { user } = useAuthStore()
     const { products, setProducts } = useProductStore()
+    const { businessData, setBusinessData } = useBusinessDataStore()
     const { actionCardResult, setActionCardResult, setAffectedProducts } = useActionBoardStore()
     const [view, setView] = useState<ViewType>(views[0])
     const [metrics, setMetrics] = useState({
@@ -66,9 +69,24 @@ export default function ActionBoardPage() {
         //     setMetrics(r.data.result)
         // }
     }
-    const fetchActionCards = async () => {
-        const cardResult = await mainClient.get(API_ENDPOINTS.Analytics.ActionCards);
-        const result: GenerateActionCardResult = cardResult.data.result
+    // const fetchActionCards = async () => {
+    //     const cardResult = await mainClient.get(API_ENDPOINTS.Analytics.ActionCards);
+    //     const result: GenerateActionCardResult = cardResult.data.result
+    //     if (result.success) {
+    //         setActionCardResult(result)
+    //         const idList = result.cards.map(v => v.entities.product_ids).flat()
+    //         const pResult = await mainClient.get(API_ENDPOINTS.Products.Base, {
+    //             params: { idList }
+    //         });
+    //         if (pResult.data.result.items) {
+    //             setAffectedProducts(pResult.data.result.items)
+    //         }
+    //     }
+    // }
+
+    const fetchActionCardsV2 = async () => {
+        const cardResult = await mainClient.post(API_ENDPOINTS.Analytics.GenerateActionCards, businessData);
+        const result: GenerateActionCardResult = cardResult.data
         if (result.success) {
             setActionCardResult(result)
             const idList = result.cards.map(v => v.entities.product_ids).flat()
@@ -82,16 +100,26 @@ export default function ActionBoardPage() {
     }
 
     useEffect(() => {
-        fetchData()
-    }, []);
-
-    useEffect(() => {
         if (!hasRun.current) {
-            fetchActionCards()
+            fetchData()
             fetchMetrics()
+            if (!businessData) {
+                mainClient.get(API_ENDPOINTS.Business.MyFullData)
+                    .then(r => {
+                        setBusinessData(r.data.result)
+                    })
+            }
             hasRun.current = true
         }
     }, [hasRun.current])
+
+    useEffect(() => {
+        if (businessData && !actionCardResult && !hasRun1.current) {
+            fetchActionCardsV2()
+            hasRun1.current = true
+        }
+    }, [businessData])
+
     return (
         <div className="p-10">
             <div className="flex justify-between items-center mb-4">

@@ -1,5 +1,6 @@
 export const BASE_API_ENDPOINT = import.meta.env.VITE_BASE_API_ENDPOINT
 export const BASE_WEBSOCKET_ENDPOINT = import.meta.env.VITE_BASE_WEBSOCKET_ENDPOINT
+export const BASE_AI_ENDPOINT = "https://ai-dev.inscend.io"
 
 export const API_ENDPOINTS = {
     Auth: {
@@ -43,6 +44,7 @@ export const API_ENDPOINTS = {
         Base: `${BASE_API_ENDPOINT}/business`,
         Mine: `${BASE_API_ENDPOINT}/business/mine`,
         MyHealth: `${BASE_API_ENDPOINT}/business/mine/health`,
+        MyFullData: `${BASE_API_ENDPOINT}/business/mine/full-data`,
         ById: (id: string) => `${BASE_API_ENDPOINT}/business/${id}`,
     },
     Users: {
@@ -50,7 +52,7 @@ export const API_ENDPOINTS = {
     },
     Brainstorm: {
         Chat: `${BASE_API_ENDPOINT}/brainstorm/chat`,
-        ExternalChat: `https://ai-dev.inscend.io/chat/brainstorm`,
+        ExternalChat: `${BASE_AI_ENDPOINT}/chat/brainstorm`,
     },
     Analytics: {
         ActionBoardMetrics: `${BASE_API_ENDPOINT}/analytics/action-board`,
@@ -62,6 +64,7 @@ export const API_ENDPOINTS = {
         Orders: `${BASE_API_ENDPOINT}/analytics/orders`,
         AvgRevenue: `${BASE_API_ENDPOINT}/analytics/avg-revenue`,
         SalesDistribution: `${BASE_API_ENDPOINT}/analytics/sales-distribution`,
-        ActionCards: `${BASE_API_ENDPOINT}/analytics/action-cards`
+        ActionCards: `${BASE_API_ENDPOINT}/analytics/action-cards`,
+        GenerateActionCards: `${BASE_AI_ENDPOINT}/action-cards/generate`
     },
 }

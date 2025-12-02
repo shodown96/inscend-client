@@ -76,12 +76,14 @@ export const useAuthStore = create(
             },
             fetchUser: async () => {
                 try {
-                    if (!get().user) {
-                        set({ loading: true })
-                        const result = await mainClient.get(API_ENDPOINTS.Users.Profile)
+                    set({ loading: true })
+                    const result = await mainClient.get(API_ENDPOINTS.Users.Profile)
+                    if (result.status === 200) {
                         set({ user: result.data.result })
-                        return result.data.result
+                    } else {
+                    //    window.location.replace(PATHS.SIGN_IN)
                     }
+                    return result.data.result
                 } catch (error) {
                 } finally {
                     set({ loading: false })

@@ -67,7 +67,7 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
       <div>
         <p className="text-sm font-medium text-gray-800 mb-1">Products Affected</p>
         <div className="flex flex-wrap gap-2">
-          {item.entities.product_ids.map((id) => {
+          {item?.entities?.product_ids?.map((id) => {
             const product = affectedProducts.find(v => v.id === id)
             return (
               <span
