@@ -11,6 +11,7 @@ export const PATHS = {
     SALES: "/sales",
     CUSTOMERS: "/customers",
     CUSTOMER_DETAILS: "/customers/:id",
+    CUSTOMER_BY_ID: (id: string) => `/customers/${id}`,
     ANALYTICS: "/analytics",
     SETTINGS: "/settings",
     WILDCARD: "*",

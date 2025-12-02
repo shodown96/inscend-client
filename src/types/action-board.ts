@@ -6,9 +6,18 @@ export interface GenerateActionCardResult {
   total_revenue_at_risk: number;
 }
 
+export type ActionCardType = "restock_alert" |
+  "customer_reminder" |
+  "discount_opportunity" |
+  "sales_target" |
+  "inventory_alert" |
+  "retention_alert" |
+  "upsell_opportunity" |
+  "seasonal_trend"
+
 export interface ActionCard {
   card_id: string;
-  type: string;
+  type: ActionCardType;
   priority: string;
   title: string;
   primary_metric: Primarymetric;
