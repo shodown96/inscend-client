@@ -4,6 +4,7 @@ import { ImportModal } from "@/components/custom/import-modal";
 import SearchInput from "@/components/custom/input-search";
 import { ProductModal } from "@/components/custom/product-modal";
 import { ProductTable } from "@/components/custom/product-table";
+import { TablePagination } from "@/components/custom/table-pagination";
 import { Button } from "@/components/ui/button";
 import useAPIQuery from "@/hooks/use-api-query";
 import { mainClient } from "@/lib/axios";
@@ -14,7 +15,7 @@ import { useEffect } from "react";
 
 export default function InventoryPage() {
     const { products, setProducts } = useProductStore();
-    const { query, setQuery, setPagination } = useAPIQuery()
+    const { query, pagination, setQuery, setPagination } = useAPIQuery()
 
     const fetchData = async () => {
         const r = await mainClient.get(API_ENDPOINTS.Products.Base, {
@@ -37,7 +38,7 @@ export default function InventoryPage() {
         } else if (query.page) {
             fetchData()
         }
-    }, [query.search]);
+    }, [query.search, query.page]);
 
     return (
         <div className="p-10">
@@ -61,6 +62,10 @@ export default function InventoryPage() {
                         />
                     </div>
                     <ProductTable products={products} />
+                    <TablePagination
+                        pagination={pagination}
+                        onPageChange={page => setQuery({ page })}
+                    />
                 </>
             ) : (
                 <div className="bg-white rounded p-3 py-10 flex flex-col gap-4 justify-center items-center text-center mb-4">

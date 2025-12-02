@@ -9,7 +9,7 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog"
 import { mainClient, multipartClient } from "@/lib/axios"
-import { API_ENDPOINTS } from "@/lib/constants"
+import { API_ENDPOINTS, BASE_AI_ENDPOINT } from "@/lib/constants"
 import { useAuthStore } from "@/lib/stores/auth"
 import { useCustomerStore } from "@/lib/stores/customer"
 import { useProductStore } from "@/lib/stores/product"
@@ -105,7 +105,7 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
       if (selectedFile.type.includes("pdf")) {
         path = "image/extract-pdf"
       }
-      const result = await multipartClient.post(`https://ai-dev.inscend.io/${path}`, values, {
+      const result = await multipartClient.post(`${BASE_AI_ENDPOINT}/${path}`, values, {
         onUploadProgress: (progressEvent) => {
           if (!progressEvent.total) return
           const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
@@ -184,7 +184,7 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
               <div className="flex flex-col items-center justify-center space-y-2">
                 <Upload className="w-6 h-6 text-gray-500" />
                 <p className="text-gray-600 font-medium">Click to upload or drag file here</p>
-                <p className="text-xs text-gray-400">PDF or CSV (max 10MB)</p>
+                <p className="text-xs text-gray-400">PDF, CSV, or IMAGES (max 10MB)</p>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center space-y-2">
@@ -208,7 +208,7 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
           <input
             id="file"
             type="file"
-            accept=".pdf,.csv"
+            accept=".pdf,.csv,image/*"
             className="hidden"
             ref={inputRef}
             onChange={handleFileChange}
@@ -237,7 +237,7 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
 
         {/* Actions */}
         <div className="flex justify-end gap-2">
-          <DialogClose ref={closeRef}/>
+          <DialogClose ref={closeRef} />
           <Button
             variant="outline"
             onClick={() => closeRef.current?.click()}

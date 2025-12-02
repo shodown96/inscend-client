@@ -69,6 +69,7 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
         <div className="flex flex-wrap gap-2">
           {item?.entities?.product_ids?.map((id) => {
             const product = affectedProducts.find(v => v.id === id)
+            // console.log(product, affectedProducts.length)
             return (
               <span
                 key={id}

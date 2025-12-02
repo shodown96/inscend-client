@@ -5,6 +5,7 @@ import { CustomersModal } from "@/components/custom/customers-modal";
 import DashboardCard from "@/components/custom/dashboard-card";
 import { ImportModal } from "@/components/custom/import-modal";
 import SearchInput from "@/components/custom/input-search";
+import { TablePagination } from "@/components/custom/table-pagination";
 import { Button } from "@/components/ui/button";
 import useAPIQuery from "@/hooks/use-api-query";
 import { mainClient } from "@/lib/axios";
@@ -15,7 +16,7 @@ import { useEffect, useState } from "react";
 
 export default function CustomersPage() {
     const { customers, setCustomers } = useCustomerStore();
-    const { query, setQuery, setPagination } = useAPIQuery()
+    const { query, pagination, setQuery, setPagination } = useAPIQuery()
     const [metrics, setMetrics] = useState({
         activeCustomers: "0",
         dormantCustomers: "0",
@@ -55,7 +56,7 @@ export default function CustomersPage() {
         } else if (query.page) {
             fetchData()
         }
-    }, [query.search]);
+    }, [query.search, query.page]);
 
     return (
         <div className="p-10">
@@ -100,6 +101,10 @@ export default function CustomersPage() {
                         />
                     </div>
                     <CustomerTable customers={customers} />
+                    <TablePagination
+                        pagination={pagination}
+                        onPageChange={page => setQuery({ page })}
+                    />
                 </>
             ) : (
                 <div className="bg-white rounded p-3 py-10 flex flex-col gap-4 justify-center items-center text-center mb-4">

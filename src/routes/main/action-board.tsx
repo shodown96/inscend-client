@@ -32,7 +32,7 @@ export default function ActionBoardPage() {
     const { user } = useAuthStore()
     const { products, setProducts } = useProductStore()
     const { businessData, setBusinessData } = useBusinessDataStore()
-    const { actionCardResult, setActionCardResult, setAffectedProducts } = useActionBoardStore()
+    const { actionCardResult, affectedProducts, setActionCardResult, setAffectedProducts } = useActionBoardStore()
     const [view, setView] = useState<ViewType>(views[0])
     const [metrics, setMetrics] = useState({
         salesTotal: "",
@@ -89,13 +89,6 @@ export default function ActionBoardPage() {
         const result: GenerateActionCardResult = cardResult.data
         if (result.success) {
             setActionCardResult(result)
-            const idList = result.cards.map(v => v.entities.product_ids).flat()
-            const pResult = await mainClient.get(API_ENDPOINTS.Products.Base, {
-                params: { idList }
-            });
-            if (pResult.data.result.items) {
-                setAffectedProducts(pResult.data.result.items)
-            }
         }
     }
 
@@ -119,6 +112,21 @@ export default function ActionBoardPage() {
             hasRun1.current = true
         }
     }, [businessData])
+
+    useEffect(() => {
+        if (actionCardResult && !affectedProducts.length) {
+            const fetchData = async () => {
+                const idList = actionCardResult.cards.map(v => v.entities.product_ids).flat()
+                const pResult = await mainClient.get(API_ENDPOINTS.Products.Base, {
+                    params: { idList }
+                });
+                if (pResult.data.result.items) {
+                    setAffectedProducts(pResult.data.result.items)
+                }
+            }
+            fetchData()
+        }
+    }, [actionCardResult])
 
     return (
         <div className="p-10">
@@ -168,7 +176,7 @@ export default function ActionBoardPage() {
             {view === 'Action card' ? (
                 <>
                     {actionCardResult?.total_cards ? (
-                        <div className="grid grid-cols-12 gap-4 h-[60vh] overflow-auto pb-4">
+                        <div className="grid grid-cols-12 gap-4 h-[60vh]-overflow-auto pb-4">
                             {actionCardResult.cards.map(v => (
                                 <div key={v.card_id} className="col-span-4" >
                                     <ActionCardItem item={v} />
