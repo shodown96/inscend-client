@@ -76,24 +76,23 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
 
       <div className="flex items-center justify-between">
         {/* Entities */}
-        <div>
-          <p className="text-sm font-medium text-gray-800 mb-1">Products Affected</p>
-          <div className="flex flex-wrap gap-2">
-            {item?.entities?.product_ids?.map((id) => {
-              const product = affectedProducts.find(v => v.id === id)
-              // console.log(product, affectedProducts.length)
-              return (
-                <span
-                  key={id}
-                  className="text-xs px-2 py-1 bg-gray-100 rounded-md text-gray-700"
-                >
-                  {product?.name || id}
-                </span>
-              )
-            }
-            )}
+        {item.entities?.product_ids?.length ? (
+          <div>
+            <p className="text-sm font-medium text-gray-800 mb-1">Products Affected</p>
+            <div className="flex flex-wrap gap-2">
+              {item.entities?.product_ids?.map((id) => {
+                const product = affectedProducts.find(v => v.id === id)
+                // console.log(product, affectedProducts.length)
+                return (
+                  <span key={id} className="text-xs px-2 py-1 bg-gray-100 rounded-md text-gray-700">
+                    {product?.name || id}
+                  </span>
+                )
+              }
+              )}
+            </div>
           </div>
-        </div>
+        ) : null}
         {/* Action button */}
         <Button size={'sm'} onClick={handleAction}>{item.action_label}</Button>
       </div>

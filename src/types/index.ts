@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export interface APIResponse<T = any> {
     apiObject: string;
     code: number;
@@ -21,3 +23,10 @@ export interface PaginatedData<T = any> extends Pagination {
     items: T[];
     pageSize: number;
 }
+
+export type AppIcon = LucideIcon | React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
+    title?: string;
+    titleId?: string;
+    desc?: string;
+    descId?: string;
+}>

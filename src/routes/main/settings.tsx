@@ -1,5 +1,6 @@
 import SettingPill from "@/components/custom/settings-pill"
 import ProfileForm from "@/components/forms/profile-form"
+import Integrations from "@/components/views/integrations"
 import TeamManagement from "@/components/views/team-management"
 import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS } from "@/lib/constants"
@@ -13,11 +14,12 @@ import { toast } from "sonner"
 
 const tabs = {
     profile: "Profile & Store Info",
-    billing: "Billing & Payments",
-    notifications: "Notifications",
-    team: "Team & Access",
-    shopPreferences: "Shop Preferences",
+    // billing: "Billing & Payments",
+    // notifications: "Notifications",
     integrations: "Integrations",
+    team: "Team & Access",
+    // shopPreferences: "Shop Preferences",
+    // integrations: "Integrations",
 }
 
 
@@ -62,7 +64,7 @@ export default function SettingsPage() {
             <div className="flex items-center w-max border rounded-lg overflow-hidden mb-4">
                 {tabList.map((item) => (
                     <SettingPill
-                    key={item}
+                        key={item}
                         label={tabs[item]}
                         active={item === activeTab}
                         onSelect={() => setSearchParams({ tab: item })}
@@ -76,6 +78,9 @@ export default function SettingsPage() {
                 ) : null}
                 {activeTab === 'team' ? (
                     <TeamManagement />
+                ) : null}
+                {activeTab === 'integrations' ? (
+                    <Integrations />
                 ) : null}
             </div>
         </div>

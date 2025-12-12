@@ -67,4 +67,10 @@ export const API_ENDPOINTS = {
         ActionCards: `${BASE_API_ENDPOINT}/analytics/action-cards`,
         GenerateActionCards: `${BASE_AI_ENDPOINT}/action-cards/generate`
     },
+    Shopify: {
+        InitiateAuth: `${BASE_API_ENDPOINT}/shopify/auth/initiate`,
+        AuthCallback: `${BASE_API_ENDPOINT}/shopify/auth/callback`,
+        Import: `${BASE_API_ENDPOINT}/shopify/import`,
+        VerfiySession: `${BASE_API_ENDPOINT}/shopify/verify-session`,
+    }
 }

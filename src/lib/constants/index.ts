@@ -5,7 +5,7 @@ export * from "./paths";
 export const APP_NAME = "Inscend"
 export const OTP_COUNTDOWN_TIME = 60;
 export const OTP_LENGTH = 6;
-export const DEFAULT_PAGE_SIZE = 25
+export const DEFAULT_PAGE_SIZE = 10
 
 export const BUSINESS_TYPES = [
     { label: "Retail", value: "Retail" },

@@ -32,7 +32,8 @@ export default function CustomersPage() {
         if (r.status === 200) {
             setCustomers(r.data.result.items)
             setPagination({
-                total: r.data.result.totalPages,
+                total: r.data.result.total,
+                totalPages: r.data.result.totalPages,
                 currentPage: r.data.result.currentPage,
             });
         }

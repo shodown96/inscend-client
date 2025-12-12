@@ -29,10 +29,11 @@ export default function SalesPage() {
         const r = await mainClient.get(API_ENDPOINTS.Sales.Base, {
             params: query
         });
-        if (r.status === 200) {
+        if (r.data.result.items) {
             setSales(r.data.result.items)
             setPagination({
-                total: r.data.result.totalPages,
+                total: r.data.result.total,
+                totalPages: r.data.result.totalPages,
                 currentPage: r.data.result.currentPage,
             });
         }
@@ -44,7 +45,6 @@ export default function SalesPage() {
             setMetrics(r.data.result)
         }
     }
-
 
     useEffect(() => {
         if (query.search.length) {

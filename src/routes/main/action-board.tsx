@@ -6,6 +6,7 @@ import ActionCardItem from "@/components/custom/action-card-item"
 import BrainstormDialog from "@/components/custom/brainstorm-dialog"
 import DashboardCard from "@/components/custom/dashboard-card"
 import { ImportModal } from "@/components/custom/import-modal"
+import Loader from "@/components/custom/loader"
 import { ProductModal } from "@/components/custom/product-modal"
 import SelectPill from "@/components/custom/select-pill"
 import { Button } from "@/components/ui/button"
@@ -19,6 +20,7 @@ import type { GenerateActionCardResult } from "@/types/action-board"
 import { ArrowRight } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
+import { toast } from "sonner"
 
 type ViewType = 'Action card' | 'Overview'
 const views: ViewType[] = [
@@ -29,10 +31,11 @@ const views: ViewType[] = [
 export default function ActionBoardPage() {
     const hasRun = useRef(false)
     const hasRun1 = useRef(false)
+    const [loading, setLoading] = useState(false)
     const { user } = useAuthStore()
     const { products, setProducts } = useProductStore()
     const { businessData, setBusinessData } = useBusinessDataStore()
-    const { actionCardResult, affectedProducts, setActionCardResult, setAffectedProducts } = useActionBoardStore()
+    const { actionCardResult, setActionCardResult, setAffectedProducts } = useActionBoardStore()
     const [view, setView] = useState<ViewType>(views[0])
     const [metrics, setMetrics] = useState({
         salesTotal: "",
@@ -85,14 +88,20 @@ export default function ActionBoardPage() {
     // }
 
     const fetchActionCardsV2 = async () => {
+        if(!businessData?.products.length){
+            toast.info("Business data not available")
+            return
+        }
         const cardResult = await mainClient.post(API_ENDPOINTS.Analytics.GenerateActionCards, businessData);
         const result: GenerateActionCardResult = cardResult.data
         if (result.success) {
             setActionCardResult(result)
         }
+        setLoading(false)
     }
 
     useEffect(() => {
+        setLoading(true)
         if (!hasRun.current) {
             fetchData()
             fetchMetrics()
@@ -100,6 +109,8 @@ export default function ActionBoardPage() {
                 mainClient.get(API_ENDPOINTS.Business.MyFullData)
                     .then(r => {
                         setBusinessData(r.data.result)
+                    }).catch(() => {
+                        setLoading(false)
                     })
             }
             hasRun.current = true
@@ -107,14 +118,14 @@ export default function ActionBoardPage() {
     }, [hasRun.current])
 
     useEffect(() => {
-        if (businessData && !actionCardResult && !hasRun1.current) {
+        if (businessData && !hasRun1.current) {
             fetchActionCardsV2()
             hasRun1.current = true
         }
     }, [businessData])
 
     useEffect(() => {
-        if (actionCardResult && !affectedProducts.length) {
+        if (actionCardResult) {
             const fetchData = async () => {
                 const idList = actionCardResult.cards.map(v => v.entities.product_ids).flat()
                 const pResult = await mainClient.get(API_ENDPOINTS.Products.Base, {
@@ -129,111 +140,113 @@ export default function ActionBoardPage() {
     }, [actionCardResult])
 
     return (
-        <div className="p-10">
-            <div className="flex justify-between items-center mb-4">
-                <div>
-                    <h4 className="font-semibold text-xl">Welcome, {user?.name.split(" ")?.[0]}</h4>
-                    <p className="text-sm">Here's what's happening with your business.</p>
+        <Loader loading={loading} className="w-full">
+            <div className="p-10">
+                <div className="flex justify-between items-center mb-4">
+                    <div>
+                        <h4 className="font-semibold text-xl">Welcome, {user?.name.split(" ")?.[0]}</h4>
+                        <p className="text-sm">Here's what's happening with your business.</p>
+                    </div>
+                    <BrainstormDialog />
                 </div>
-                <BrainstormDialog />
-            </div>
-            <div className="border rounded-lg bg-white grid grid-cols-12 mb-4">
-                <DashboardCard
-                    title="Today’s Revenue"
-                    description={0}
-                    bordered
-                />
-                <DashboardCard
-                    title="Active Customers"
-                    description={0}
-                    bordered
-                />
-                <DashboardCard
-                    title="Completed Actions"
-                    description={0}
-                    bordered
-                />
-                <DashboardCard
-                    title="Stock Health"
-                    description={0}
-                />
-            </div>
-            <div className="flex justify-between items-center">
-                <div className="flex items-center w-max border rounded-lg overflow-hidden">
-                    {views.map(item => (
-                        <SelectPill
-                            key={item}
-                            label={item}
-                            active={item === view}
-                            onSelect={() => setView(item)}
-                        />
-                    ))}
+                <div className="border rounded-lg bg-white grid grid-cols-12 mb-4">
+                    <DashboardCard
+                        title="Today’s Revenue"
+                        description={0}
+                        bordered
+                    />
+                    <DashboardCard
+                        title="Active Customers"
+                        description={0}
+                        bordered
+                    />
+                    <DashboardCard
+                        title="Completed Actions"
+                        description={0}
+                        bordered
+                    />
+                    <DashboardCard
+                        title="Stock Health"
+                        description={0}
+                    />
                 </div>
-                <ProductModal buttonText={`Add ${products.length ? '' : 'your first'} product`} />
-            </div>
-            <hr className="my-3" />
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center w-max border rounded-lg overflow-hidden">
+                        {views.map(item => (
+                            <SelectPill
+                                key={item}
+                                label={item}
+                                active={item === view}
+                                onSelect={() => setView(item)}
+                            />
+                        ))}
+                    </div>
+                    <ProductModal buttonText={`Add ${products.length ? '' : 'your first'} product`} />
+                </div>
+                <hr className="my-3" />
 
-            {view === 'Action card' ? (
-                <>
-                    {actionCardResult?.total_cards ? (
-                        <div className="grid grid-cols-12 gap-4 h-[60vh]-overflow-auto pb-4">
-                            {actionCardResult.cards.map(v => (
-                                <div key={v.card_id} className="col-span-4" >
-                                    <ActionCardItem item={v} />
-                                </div>
-                            ))}
+                {view === 'Action card' ? (
+                    <>
+                        {actionCardResult?.total_cards ? (
+                            <div className="grid grid-cols-12 gap-4 h-[60vh]-overflow-auto pb-4">
+                                {actionCardResult.cards.map(v => (
+                                    <div key={v.card_id} className="col-span-12 md:col-span-6 xl:col-span-4" >
+                                        <ActionCardItem item={v} />
+                                    </div>
+                                ))}
 
-                        </div>
-                    ) : (
-                        <>
-                            <div className="bg-white rounded p-3 py-10 flex flex-col gap-4 justify-center items-center text-center mb-4">
-                                <EmptyIcon />
-                                <div>Your Action Board is empty</div>
-                                <div className="w-3/5">
-                                    Start by adding products to your inventory. This will show important insights, alerts, and actions to help you manage your business.
+                            </div>
+                        ) : (
+                            <>
+                                <div className="bg-white rounded p-3 py-10 flex flex-col gap-4 justify-center items-center text-center mb-4">
+                                    <EmptyIcon />
+                                    <div>Your Action Board is empty</div>
+                                    <div className="w-3/5">
+                                        Start by adding products to your inventory. This will show important insights, alerts, and actions to help you manage your business.
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <ProductModal buttonText="Add Your First Product" />
+                                        <ImportModal type="Products" />
+                                    </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <ProductModal buttonText="Add Your First Product" />
-                                    <ImportModal type="Products" />
+                                    <div className="rounded border p-4 flex flex-col gap-3 bg-white">
+                                        <AddProductIcon />
+                                        <div className="font-medium">Add Products</div>
+                                        <p className="text-sm">Start building your inventory by adding your first products.</p>
+                                        <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.INVENTORY)}>
+                                            <span>Get started</span>
+                                            <ArrowRight className="-ml-1" />
+                                        </Button>
+                                    </div>
+                                    <div className="rounded border p-4 flex flex-col gap-3 bg-white" >
+                                        <AddCustomerIcon />
+                                        <div className="font-medium">Add Customers</div>
+                                        <p className="text-sm">Keep track of your customers and their purchase history.</p>
+                                        <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.CUSTOMERS)}>
+                                            <span>Get started</span>
+                                            <ArrowRight className="-ml-1" />
+                                        </Button>
+                                    </div>
+                                    <div className="rounded border p-4 flex flex-col gap-3 bg-white">
+                                        <RecordSaleIcon />
+                                        <div className="font-medium">Record a Sale</div>
+                                        <p className="text-sm">Log your first sale and start tracking your revenue.</p>
+                                        <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.SALES)}>
+                                            <span>Get started</span>
+                                            <ArrowRight className="-ml-1" />
+                                        </Button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex gap-2">
-                                <div className="rounded border p-4 flex flex-col gap-3 bg-white">
-                                    <AddProductIcon />
-                                    <div className="font-medium">Add Products</div>
-                                    <p className="text-sm">Start building your inventory by adding your first products.</p>
-                                    <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.INVENTORY)}>
-                                        <span>Get started</span>
-                                        <ArrowRight className="-ml-1" />
-                                    </Button>
-                                </div>
-                                <div className="rounded border p-4 flex flex-col gap-3 bg-white" >
-                                    <AddCustomerIcon />
-                                    <div className="font-medium">Add Customers</div>
-                                    <p className="text-sm">Keep track of your customers and their purchase history.</p>
-                                    <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.CUSTOMERS)}>
-                                        <span>Get started</span>
-                                        <ArrowRight className="-ml-1" />
-                                    </Button>
-                                </div>
-                                <div className="rounded border p-4 flex flex-col gap-3 bg-white">
-                                    <RecordSaleIcon />
-                                    <div className="font-medium">Record a Sale</div>
-                                    <p className="text-sm">Log your first sale and start tracking your revenue.</p>
-                                    <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.SALES)}>
-                                        <span>Get started</span>
-                                        <ArrowRight className="-ml-1" />
-                                    </Button>
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </>
-            ) : (
-                <div className="flex justify-center items-center h-[50vh] text-lg font-medium">
-                    Coming soon
-                </div>
-            )}
-        </div>
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <div className="flex justify-center items-center h-[50vh] text-lg font-medium">
+                        Coming soon
+                    </div>
+                )}
+            </div>
+        </Loader>
     )
 }

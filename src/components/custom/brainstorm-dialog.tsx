@@ -6,7 +6,7 @@ import {
   DrawerTrigger
 } from "@/components/ui/drawer"
 import { ArrowLeft, Clock, X } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "../ui/button"
 import BrainstormChatView from "./brainstorm-chat-view"
 import BrainstormHistoryView from "./brainstorm-history-view"
@@ -19,6 +19,7 @@ import { API_ENDPOINTS } from "@/lib/constants"
 export default function BrainstormDialog({ outlined = false }) {
   const { businessData, setBusinessData } = useBrainstormStore()
   const [currentView, setCurrentView] = useState<'chat' | 'history'>('chat');
+  const triggerRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     if (!businessData) {
@@ -31,13 +32,11 @@ export default function BrainstormDialog({ outlined = false }) {
 
   return (
     <Drawer>
-      <DrawerTrigger>
-        <Button variant={outlined ? 'outline' : 'default'}>
-          {outlined ? <OutlinedIcon /> : <WhiteIcon />}
-          <span>Brainstorm</span>
-        </Button>
-
-      </DrawerTrigger>
+      <DrawerTrigger ref={triggerRef} />
+      <Button variant={outlined ? 'outline' : 'default'} onClick={triggerRef.current?.click}>
+        {outlined ? <OutlinedIcon /> : <WhiteIcon />}
+        <span>Brainstorm</span>
+      </Button>
       <DrawerContent className="p-0">
         <DrawerHeader className="p-4 border-b">
           {currentView === 'chat' ? (

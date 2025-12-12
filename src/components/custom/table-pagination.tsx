@@ -29,7 +29,7 @@ export function TablePagination({
     };
 
     return (
-        <Pagination>
+        <Pagination className="justify-end mt-4">
             <PaginationContent>
 
                 <PaginationItem>

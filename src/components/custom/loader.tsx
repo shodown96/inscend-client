@@ -16,7 +16,7 @@ const Loader = ({
 
   return (
     <div className={cn(
-      "h-screen w-screen flex justify-center items-center p-4",
+      "h-screen w-full flex justify-center items-center p-4",
       className
     )}>
       <div className="flex flex-col items-center loader-container">

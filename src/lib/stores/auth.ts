@@ -10,6 +10,7 @@ import { useBrainstormStore } from './brainstorm';
 import { useCustomerStore } from './customer';
 import { useProductStore } from './product';
 import { useSalesStore } from './sale';
+import { useIntegrationsStore } from './integrations';
 
 interface Tokens {
     accessToken: string | null
@@ -72,6 +73,7 @@ export const useAuthStore = create(
                     useCustomerStore.getState().resetStore()
                     useProductStore.getState().resetStore()
                     useSalesStore.getState().resetStore()
+                    useIntegrationsStore.getState().resetStore()
                 }
             },
             fetchUser: async () => {
