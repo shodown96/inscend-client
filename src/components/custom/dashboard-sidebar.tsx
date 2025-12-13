@@ -48,7 +48,7 @@ export default function DashboardSidebar({ }) {
                     ))}
                 </div>
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center max-lg:justify-between">
                 {user?.avatar?.url ? (
                     <img src={user.avatar.url} alt="" className="size-8 rounded-full" />
                 ) : (
@@ -56,7 +56,7 @@ export default function DashboardSidebar({ }) {
                         {getInitials(user?.name)}
                     </div>
                 )}
-                <div className="text-sm flex-1">
+                <div className="text-sm flex-1 max-lg:hidden">
                     <p>{user?.name}</p>
                     <p className="text-gray-400">{getLimitedText(`${user?.email}`, 20)}</p>
                 </div>

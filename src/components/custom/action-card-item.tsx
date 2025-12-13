@@ -74,7 +74,7 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
         <p className="text-sm text-gray-600">{item.reasoning}</p>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         {/* Entities */}
         {item.entities?.product_ids?.length ? (
           <div>

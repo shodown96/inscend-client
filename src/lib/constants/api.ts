@@ -56,6 +56,7 @@ export const API_ENDPOINTS = {
     },
     Analytics: {
         ActionBoardMetrics: `${BASE_API_ENDPOINT}/analytics/action-board`,
+        ActionBoardMetricCards: `${BASE_API_ENDPOINT}/analytics/action-board-metric-cards`,
         GetBusinessData: `${BASE_API_ENDPOINT}/analytics/get-business-data`,
         SalesTotal: `${BASE_API_ENDPOINT}/analytics/sales-total`,
         OrderStatuses: `${BASE_API_ENDPOINT}/analytics/order-statuses`,

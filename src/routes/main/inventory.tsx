@@ -24,7 +24,8 @@ export default function InventoryPage() {
         if (r.data.result.items) {
             setProducts(r.data.result.items)
             setPagination({
-                total: r.data.result.totalPages,
+                total: r.data.result.total,
+                totalPages: r.data.result.totalPages,
                 currentPage: r.data.result.currentPage,
             });
         }

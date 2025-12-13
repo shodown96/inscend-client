@@ -1,12 +1,12 @@
+import ShopifyLogo from "@/assets/icons/shopify-logo.svg?react"
 import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS } from "@/lib/constants"
 import { useIntegrationsStore } from "@/lib/stores/integrations"
 import { isAxiosError } from "axios"
 import { useState } from "react"
 import { toast } from "sonner"
-import { Button } from "../ui/button"
-import ShopifyLogo from "@/assets/icons/shopify-logo.svg?react"
 import IntegrationItem from "../custom/integration-item"
+import { Button } from "../ui/button"
 export default function ShopifyIntegration() {
     const [shop, setShop] = useState("")
     const { integrations } = useIntegrationsStore()
@@ -19,7 +19,7 @@ export default function ShopifyIntegration() {
 
             if (res.status === 200) {
                 toast.success(res.data.message)
-                window.open(res.data.result.url)
+                window.location.replace(res.data.result.url)
             } else {
                 toast.error(res.data.message)
             }

@@ -38,105 +38,86 @@ export default function ActionBoardPage() {
     const { actionCardResult, setActionCardResult, setAffectedProducts } = useActionBoardStore()
     const [view, setView] = useState<ViewType>(views[0])
     const [metrics, setMetrics] = useState({
-        salesTotal: "",
-        orderStatuses: "",
-        totalProfit: "",
-        customerStats: "",
-        orderStats: "",
-        avgOrderRevenue: "",
-        salesDistribution: ""
+        todaysRevenue: "0",
+        activeCustomers: "0",
+        stockHealth: "0",
     })
     const navigate = useNavigate()
 
-    const fetchData = async () => {
+    const fetchProducts = async () => {
         const r = await mainClient.get(API_ENDPOINTS.Products.Base);
         if (r.data.result.items) {
             setProducts(r.data.result.items)
         }
     }
-    const fetchMetrics = async () => {
-        if (false) {
-            console.log(metrics)
-            setMetrics({
-                salesTotal: "",
-                orderStatuses: "",
-                totalProfit: "",
-                customerStats: "",
-                orderStats: "",
-                avgOrderRevenue: "",
-                salesDistribution: ""
-            })
-        }
-        // const r = await mainClient.get(API_ENDPOINTS.Analytics.ActionBoardMetrics);
-        // if (r.data.result) {
-        //     setMetrics(r.data.result)
-        // }
-    }
-    // const fetchActionCards = async () => {
-    //     const cardResult = await mainClient.get(API_ENDPOINTS.Analytics.ActionCards);
-    //     const result: GenerateActionCardResult = cardResult.data.result
-    //     if (result.success) {
-    //         setActionCardResult(result)
-    //         const idList = result.cards.map(v => v.entities.product_ids).flat()
-    //         const pResult = await mainClient.get(API_ENDPOINTS.Products.Base, {
-    //             params: { idList }
-    //         });
-    //         if (pResult.data.result.items) {
-    //             setAffectedProducts(pResult.data.result.items)
-    //         }
-    //     }
-    // }
 
-    const fetchActionCardsV2 = async () => {
-        if(!businessData?.products.length){
+    const fetchMetrics = async () => {
+        const r = await mainClient.get(API_ENDPOINTS.Analytics.ActionBoardMetricCards);
+        if (r.data.result) {
+            setMetrics(r.data.result)
+        }
+    }
+
+    const getFullBusinessData = async () => {
+        const result = await mainClient.get(API_ENDPOINTS.Business.MyFullData)
+        if (result.status === 200) {
+            setBusinessData(result.data.result)
+        }
+    }
+
+    const fetchActionCards = async () => {
+        if (!businessData?.products.length) {
             toast.info("Business data not available")
+            setLoading(false)
             return
         }
-        const cardResult = await mainClient.post(API_ENDPOINTS.Analytics.GenerateActionCards, businessData);
-        const result: GenerateActionCardResult = cardResult.data
-        if (result.success) {
-            setActionCardResult(result)
+        try {
+            const cardResult = await mainClient.post(API_ENDPOINTS.Analytics.GenerateActionCards, businessData);
+            const result: GenerateActionCardResult = cardResult.data
+            if (result.success) {
+                setActionCardResult(result)
+            }
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
+    }
+
+    const fetchAffectedProducts = async () => {
+        if (actionCardResult?.success) {
+            const idList = actionCardResult.cards.map(v => v.entities.product_ids).flat()
+            const pResult = await mainClient.get(API_ENDPOINTS.Products.Base, {
+                params: { idList }
+            });
+            if (pResult.data.result.items) {
+                setAffectedProducts(pResult.data.result.items)
+            }
+        }
+    }
+
+    const init = async () => {
+        setLoading(true)
+        await fetchProducts()
+        await fetchMetrics()
+        await getFullBusinessData()
+
     }
 
     useEffect(() => {
-        setLoading(true)
         if (!hasRun.current) {
-            fetchData()
-            fetchMetrics()
-            if (!businessData) {
-                mainClient.get(API_ENDPOINTS.Business.MyFullData)
-                    .then(r => {
-                        setBusinessData(r.data.result)
-                    }).catch(() => {
-                        setLoading(false)
-                    })
-            }
+            init()
             hasRun.current = true
         }
     }, [hasRun.current])
 
     useEffect(() => {
-        if (businessData && !hasRun1.current) {
-            fetchActionCardsV2()
+        if (businessData?.products.length && hasRun.current && !hasRun1.current) {
+            fetchActionCards()
             hasRun1.current = true
         }
     }, [businessData])
 
     useEffect(() => {
-        if (actionCardResult) {
-            const fetchData = async () => {
-                const idList = actionCardResult.cards.map(v => v.entities.product_ids).flat()
-                const pResult = await mainClient.get(API_ENDPOINTS.Products.Base, {
-                    params: { idList }
-                });
-                if (pResult.data.result.items) {
-                    setAffectedProducts(pResult.data.result.items)
-                }
-            }
-            fetchData()
-        }
+        fetchAffectedProducts()
     }, [actionCardResult])
 
     return (
@@ -152,22 +133,22 @@ export default function ActionBoardPage() {
                 <div className="border rounded-lg bg-white grid grid-cols-12 mb-4">
                     <DashboardCard
                         title="Today’s Revenue"
-                        description={0}
+                        description={metrics.todaysRevenue}
                         bordered
                     />
                     <DashboardCard
                         title="Active Customers"
-                        description={0}
+                        description={metrics.activeCustomers}
                         bordered
                     />
-                    <DashboardCard
+                    {/* <DashboardCard
                         title="Completed Actions"
                         description={0}
                         bordered
-                    />
+                    /> */}
                     <DashboardCard
                         title="Stock Health"
-                        description={0}
+                        description={`${metrics.stockHealth}%`}
                     />
                 </div>
                 <div className="flex justify-between items-center">

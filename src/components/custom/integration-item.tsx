@@ -35,7 +35,7 @@ export default function IntegrationItem({
     const [enabled, setEnabled] = useState(integrated);
 
     const handleCheckChange = (checked: boolean) => {
-        setEnabled(checked);
+        // setEnabled(checked);
 
         if (checked) {
             // User turned ON → show connect modal
