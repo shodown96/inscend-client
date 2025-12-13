@@ -12,9 +12,12 @@ import { API_ENDPOINTS, APP_NAME } from "@/lib/constants";
 import { useProductStore } from "@/lib/stores/product";
 import { delayDebounceFn } from "@/lib/utils";
 import { useEffect } from "react";
+import { useSearchParams } from "react-router";
 
 export default function InventoryPage() {
-    const { products, setProducts } = useProductStore();
+    const [searchParams, setSearchParams] = useSearchParams()
+    const productId = searchParams.get("product")
+    const { products, setProducts, setSelectedProduct } = useProductStore();
     const { query, pagination, setQuery, setPagination } = useAPIQuery()
 
     const fetchData = async () => {
@@ -30,6 +33,20 @@ export default function InventoryPage() {
             });
         }
     }
+    const fetchProductData = async () => {
+        if (!productId || true) return;
+        const r = await mainClient.get(API_ENDPOINTS.Products.ById("productId"));
+        if (r.data.result.items) {
+            setSearchParams("")
+            setSelectedProduct(r.data.result.items)
+        }
+    }
+
+    useEffect(() => {
+        if (productId) {
+            fetchProductData()
+        }
+    }, [productId])
 
 
     useEffect(() => {

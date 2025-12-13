@@ -10,9 +10,9 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
 
   const handleAction = () => {
     if (item.type === 'customer_reminder') {
-      navigate(PATHS.CUSTOMERS)
+      navigate(`${PATHS.CUSTOMERS}/${item.entities.customer_ids?.[0]}`)
     } else {
-      navigate(PATHS.INVENTORY)
+      navigate(`${PATHS.INVENTORY}?product=${item.entities.product_ids?.[0]}`)
     }
   }
   return (

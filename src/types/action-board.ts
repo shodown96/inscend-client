@@ -32,6 +32,7 @@ export interface ActionCard {
 
 interface Entities {
   product_ids: string[];
+  customer_ids: string[];
 }
 
 interface Primarymetric {
