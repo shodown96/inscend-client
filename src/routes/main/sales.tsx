@@ -9,7 +9,7 @@ import { TablePagination } from "@/components/custom/table-pagination";
 import { Button } from "@/components/ui/button";
 import useAPIQuery from "@/hooks/use-api-query";
 import { mainClient } from "@/lib/axios";
-import { API_ENDPOINTS } from "@/lib/constants";
+import { API_ENDPOINTS, APP_NAME } from "@/lib/constants";
 import { useSalesStore } from "@/lib/stores/sale";
 import { delayDebounceFn } from "@/lib/utils";
 import { Upload } from "lucide-react";
@@ -60,6 +60,7 @@ export default function SalesPage() {
     }, [])
     return (
         <div className="p-10">
+            <title>{`Sales | ${APP_NAME}`}</title>
             <div className="flex justify-between items-center mb-4">
                 <div>
                     <h4 className="text-xl font-semibold">Sales Management</h4>

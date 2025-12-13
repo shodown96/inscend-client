@@ -8,7 +8,7 @@ export default function MainLayout() {
             <DashboardSidebar />
             <div className='flex-1'>
                 <DashboardHeader />
-                <div className="max-h-[calc(100vh-57px)] overflow-auto">
+                <div className="max-h-[calc(100vh-57px)] overflow-auto lg:max-w-[calc(100vw-270px)] max-w-[calc(100vw-60px)]">
                     <Outlet />
                 </div>
             </div>

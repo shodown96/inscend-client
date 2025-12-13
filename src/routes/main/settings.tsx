@@ -3,7 +3,7 @@ import ProfileForm from "@/components/forms/profile-form"
 import Integrations from "@/components/views/integrations"
 import TeamManagement from "@/components/views/team-management"
 import { mainClient } from "@/lib/axios"
-import { API_ENDPOINTS } from "@/lib/constants"
+import { API_ENDPOINTS, APP_NAME } from "@/lib/constants"
 import { useAuthStore } from "@/lib/stores/auth"
 import type { ProfileParamsType } from "@/lib/validations/auth"
 import type { User } from "@/types/auth"
@@ -54,6 +54,7 @@ export default function SettingsPage() {
     }, [activeTab])
     return (
         <div className="p-10">
+            <title>{`Settings | ${APP_NAME}`}</title>
             <div className="flex justify-between items-center mb-4">
                 <div>
                     <h4 className="font-semibold text-xl">Settings</h4>

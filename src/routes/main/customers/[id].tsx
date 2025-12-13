@@ -2,7 +2,7 @@ import BrainstormDialog from "@/components/custom/brainstorm-dialog";
 import { CustomerView } from "@/components/custom/customer-details";
 import useAPIQuery from "@/hooks/use-api-query";
 import { mainClient } from "@/lib/axios";
-import { API_ENDPOINTS } from "@/lib/constants";
+import { API_ENDPOINTS, APP_NAME } from "@/lib/constants";
 import { useCustomerStore } from "@/lib/stores/customer";
 import type { Sale } from "@/types/sales";
 import { useEffect, useState } from "react";
@@ -45,6 +45,7 @@ export default function CustomerDetailsPage() {
   if (!selectedCustomer) return null
   return (
     <div className="p-10">
+      <title>{`${selectedCustomer.name} | ${APP_NAME}`}</title>
       <div className="flex justify-between items-center mb-4">
         <div>
           <h4 className="font-semibold text-xl">{selectedCustomer.name}</h4>

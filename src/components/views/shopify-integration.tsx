@@ -9,6 +9,7 @@ import IntegrationItem from "../custom/integration-item"
 import { Button } from "../ui/button"
 export default function ShopifyIntegration() {
     const [shop, setShop] = useState("")
+    const [loading, setLoading] = useState(false)
     const { integrations } = useIntegrationsStore()
 
     const initiateAuth = async () => {
@@ -30,6 +31,7 @@ export default function ShopifyIntegration() {
         }
     }
     const importShopifyData = async () => {
+        setLoading(true)
         try {
             const res = await mainClient.get(API_ENDPOINTS.Shopify.Import)
 
@@ -42,6 +44,8 @@ export default function ShopifyIntegration() {
             if (isAxiosError(error)) {
                 toast.error(error.response?.data.message)
             }
+        } finally {
+            setLoading(false)
         }
     }
     const onSubmit = async (e: React.FormEvent) => {
@@ -67,7 +71,11 @@ export default function ShopifyIntegration() {
                         <>
                             {integrations.shopify ? (
                                 <div>
-                                    <Button onClick={importShopifyData}>Import shopify data</Button>
+                                    <Button
+                                        loading={loading}
+                                        onClick={importShopifyData}>
+                                        Import shopify data
+                                    </Button>
                                 </div>
                             ) : (
                                 <form onSubmit={onSubmit} className="space-y-4">
@@ -77,12 +85,14 @@ export default function ShopifyIntegration() {
                                             type="text"
                                             value={shop}
                                             onChange={(e) => setShop(e.target.value)}
-                                            placeholder="e.g. my-store.myshopify.com"
+                                            placeholder="e.g. inscend-2.myshopify.com"
                                             className="border p-2 rounded"
                                         />
                                     </div>
 
-                                    <Button type="submit" className="px-4 py-2 rounded bg-black text-white w-full">
+                                    <Button
+                                        type="submit"
+                                        className="px-4 py-2 rounded bg-black text-white w-full">
                                         Connect Shopify Store
                                     </Button>
                                 </form>

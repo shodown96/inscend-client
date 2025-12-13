@@ -11,7 +11,7 @@ import { ProductModal } from "@/components/custom/product-modal"
 import SelectPill from "@/components/custom/select-pill"
 import { Button } from "@/components/ui/button"
 import { mainClient } from "@/lib/axios"
-import { API_ENDPOINTS, PATHS } from "@/lib/constants"
+import { API_ENDPOINTS, APP_NAME, PATHS } from "@/lib/constants"
 import { useActionBoardStore } from "@/lib/stores/action-board"
 import { useAuthStore } from "@/lib/stores/auth"
 import { useBusinessDataStore } from "@/lib/stores/business"
@@ -29,8 +29,8 @@ const views: ViewType[] = [
 ]
 
 export default function ActionBoardPage() {
-    const hasRun = useRef(false)
-    const hasRun1 = useRef(false)
+    const initHasRun = useRef(false)
+    const actionCardsHasRun = useRef(false)
     const [loading, setLoading] = useState(false)
     const { user } = useAuthStore()
     const { products, setProducts } = useProductStore()
@@ -45,6 +45,7 @@ export default function ActionBoardPage() {
     const navigate = useNavigate()
 
     const fetchProducts = async () => {
+        console.log("Fetching Products")
         const r = await mainClient.get(API_ENDPOINTS.Products.Base);
         if (r.data.result.items) {
             setProducts(r.data.result.items)
@@ -52,6 +53,7 @@ export default function ActionBoardPage() {
     }
 
     const fetchMetrics = async () => {
+        console.log("Fetching Metrics")
         const r = await mainClient.get(API_ENDPOINTS.Analytics.ActionBoardMetricCards);
         if (r.data.result) {
             setMetrics(r.data.result)
@@ -59,10 +61,12 @@ export default function ActionBoardPage() {
     }
 
     const getFullBusinessData = async () => {
+        console.log("Fetching Full Business Data")
         const result = await mainClient.get(API_ENDPOINTS.Business.MyFullData)
         if (result.status === 200) {
             setBusinessData(result.data.result)
         }
+
     }
 
     const fetchActionCards = async () => {
@@ -71,6 +75,7 @@ export default function ActionBoardPage() {
             setLoading(false)
             return
         }
+        console.log("Fetching Action Cards")
         try {
             const cardResult = await mainClient.post(API_ENDPOINTS.Analytics.GenerateActionCards, businessData);
             const result: GenerateActionCardResult = cardResult.data
@@ -79,11 +84,13 @@ export default function ActionBoardPage() {
             }
         } finally {
             setLoading(false)
+            actionCardsHasRun.current = true
         }
     }
 
     const fetchAffectedProducts = async () => {
         if (actionCardResult?.success) {
+            console.log("Fetching Affected Products")
             const idList = actionCardResult.cards.map(v => v.entities.product_ids).flat()
             const pResult = await mainClient.get(API_ENDPOINTS.Products.Base, {
                 params: { idList }
@@ -99,22 +106,20 @@ export default function ActionBoardPage() {
         await fetchProducts()
         await fetchMetrics()
         await getFullBusinessData()
-
+        initHasRun.current = true
     }
 
     useEffect(() => {
-        if (!hasRun.current) {
+        if (!initHasRun.current) {
             init()
-            hasRun.current = true
         }
-    }, [hasRun.current])
+    }, [initHasRun.current])
 
     useEffect(() => {
-        if (businessData?.products.length && hasRun.current && !hasRun1.current) {
+        if (initHasRun.current && !actionCardsHasRun.current) {
             fetchActionCards()
-            hasRun1.current = true
         }
-    }, [businessData])
+    }, [businessData, initHasRun])
 
     useEffect(() => {
         fetchAffectedProducts()
@@ -122,6 +127,7 @@ export default function ActionBoardPage() {
 
     return (
         <Loader loading={loading} className="w-full">
+            <title>{`Action Board | ${APP_NAME}`}</title>
             <div className="p-10">
                 <div className="flex justify-between items-center mb-4">
                     <div>
@@ -135,11 +141,13 @@ export default function ActionBoardPage() {
                         title="Today’s Revenue"
                         description={metrics.todaysRevenue}
                         bordered
+                        className="col-span-4"
                     />
                     <DashboardCard
                         title="Active Customers"
                         description={metrics.activeCustomers}
                         bordered
+                        className="col-span-4"
                     />
                     {/* <DashboardCard
                         title="Completed Actions"
@@ -149,6 +157,7 @@ export default function ActionBoardPage() {
                     <DashboardCard
                         title="Stock Health"
                         description={`${metrics.stockHealth}%`}
+                        className="col-span-4"
                     />
                 </div>
                 <div className="flex justify-between items-center">

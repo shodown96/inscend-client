@@ -25,7 +25,7 @@ export default function Integrations() {
             if (res.status === 200) {
                 if (res.data.result.integrated) {
                     setIntegrations({ shopify: true })
-                    toast.success(res.data.message)
+                    // toast.success(res.data.message)
                 }
             } else {
                 toast.error(res.data.message)

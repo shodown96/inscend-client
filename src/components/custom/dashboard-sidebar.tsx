@@ -25,30 +25,26 @@ export default function DashboardSidebar({ }) {
         { name: "Settings", path: PATHS.SETTINGS, icon: SettingsIcon },
     ]
     return (
-        <div className="bg-white lg:w-[270px] h-screen border px-2 py-4 flex flex-col justify-between">
+        <div className="bg-white w-[60px] lg:w-[270px] h-screen border px-2 py-4 flex flex-col justify-between">
             <div>
-                <Logo />
-                {/* <div className="bg-[#FAFAFA] rounded-lg flex gap-2 items-center my-4 px-4 py-2">
-                    <Search className="" />
-                    <input type="text" className="outline-none w-full" />
-                    <span className="shadow p-1 rounded flex items-center bg-[#FAFAFA]">{os === 'mac' ? <Command className="size-4" /> : 'Ctrl'} <span>F</span></span>
-                </div> */}
+                <div className="max-lg:hidden"><Logo /></div>
+                <img src="/logo.png" className="lg:hidden size-8 mx-auto" />
 
-                <div className="flex flex-col gap-4 mt-4">
+                <div className="flex flex-col gap-4 mt-4 max-lg:items-center">
                     {routes.map(v => (
                         <div key={v.path}
                             onClick={() => navigate(v.path)}
                             className={cn(
-                                "rounded-lg flex gap-4 items-center px-4 py-2 transition-all cursor-pointer",
-                                pathname.includes(v.path) ? 'border bg-[#FAFAFA]' : ''
+                                "rounded-lg flex gap-4 items-center p-2 lg:px-4 lg:py-2 transition-all cursor-pointer border border-transparent",
+                                pathname.includes(v.path) ? 'border-gray-200 bg-[#FAFAFA]' : ''
                             )}>
-                            <v.icon />
-                            <span className="">{v.name}</span>
+                            <v.icon className="" />
+                            <span className="max-lg:hidden">{v.name}</span>
                         </div>
                     ))}
                 </div>
             </div>
-            <div className="flex gap-2 items-center max-lg:justify-between">
+            <div className="flex gap-2 items-center max-lg:flex-col">
                 {user?.avatar?.url ? (
                     <img src={user.avatar.url} alt="" className="size-8 rounded-full" />
                 ) : (
