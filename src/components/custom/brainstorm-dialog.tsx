@@ -2,24 +2,23 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerHeader,
-  DrawerTrigger
+  DrawerHeader
 } from "@/components/ui/drawer"
+import { mainClient } from "@/lib/axios"
+import { API_ENDPOINTS } from "@/lib/constants"
+import { useBrainstormStore } from "@/lib/stores/brainstorm"
 import { ArrowLeft, Clock, X } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import BrainstormChatView from "./brainstorm-chat-view"
 import BrainstormHistoryView from "./brainstorm-history-view"
 import BrainstormSelect from "./brainstorm-select"
 import { OutlinedIcon, WhiteIcon } from "./brianstorm-icons"
-import { useBrainstormStore } from "@/lib/stores/brainstorm"
-import { mainClient } from "@/lib/axios"
-import { API_ENDPOINTS } from "@/lib/constants"
 
 export default function BrainstormDialog({ outlined = false }) {
   const { businessData, setBusinessData } = useBrainstormStore()
   const [currentView, setCurrentView] = useState<'chat' | 'history'>('chat');
-  const triggerRef = useRef<HTMLButtonElement>(null)
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!businessData) {
@@ -31,9 +30,8 @@ export default function BrainstormDialog({ outlined = false }) {
   }, [businessData])
 
   return (
-    <Drawer>
-      <DrawerTrigger ref={triggerRef} />
-      <Button variant={outlined ? 'outline' : 'default'} onClick={triggerRef.current?.click}>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <Button variant={outlined ? 'outline' : 'default'} onClick={() => setOpen(true)}>
         {outlined ? <OutlinedIcon /> : <WhiteIcon />}
         <span>Brainstorm</span>
       </Button>
