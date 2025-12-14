@@ -14,7 +14,7 @@ import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS, APP_NAME, PATHS } from "@/lib/constants"
 import { useActionBoardStore } from "@/lib/stores/action-board"
 import { useAuthStore } from "@/lib/stores/auth"
-import { useBusinessDataStore } from "@/lib/stores/business"
+import { useBusinessDataStore, type BusinessData } from "@/lib/stores/business"
 import { useProductStore } from "@/lib/stores/product"
 import type { GenerateActionCardResult } from "@/types/action-board"
 import { ArrowRight } from "lucide-react"
@@ -30,11 +30,10 @@ const views: ViewType[] = [
 
 export default function ActionBoardPage() {
     const initHasRun = useRef(false)
-    const actionCardsHasRun = useRef(false)
     const [loading, setLoading] = useState(false)
     const { user } = useAuthStore()
     const { products, setProducts } = useProductStore()
-    const { businessData, setBusinessData } = useBusinessDataStore()
+    const { setBusinessData } = useBusinessDataStore()
     const { actionCardResult, setActionCardResult, setAffectedProducts } = useActionBoardStore()
     const [view, setView] = useState<ViewType>(views[0])
     const [metrics, setMetrics] = useState({
@@ -63,32 +62,37 @@ export default function ActionBoardPage() {
     const getFullBusinessData = async () => {
         console.log("Fetching Full Business Data")
         const result = await mainClient.get(API_ENDPOINTS.Business.MyFullData)
-        if (result.status === 200) {
-            setBusinessData(result.data.result)
+        console.log(result.data.result)
+        if (result.data.status === 'success') {
+            const data = result.data.result as BusinessData
+            if (!data.products.length) {
+                setLoading(false)
+                return;
+            }
+            setBusinessData(data)
+            await fetchActionCards(data)
         }
-
     }
 
-    const fetchActionCards = async () => {
+    const fetchActionCards = async (businessData: BusinessData) => {
         if (!businessData?.products.length) {
-            toast.info("Business data not available")
-            setLoading(false)
             return
         }
         console.log("Fetching Action Cards")
+        toast.info("Fetching Action Cards")
         try {
             const cardResult = await mainClient.post(API_ENDPOINTS.Analytics.GenerateActionCards, businessData);
             const result: GenerateActionCardResult = cardResult.data
             if (result.success) {
                 setActionCardResult(result)
+                fetchAffectedProducts(result)
             }
         } finally {
             setLoading(false)
-            actionCardsHasRun.current = true
         }
     }
 
-    const fetchAffectedProducts = async () => {
+    const fetchAffectedProducts = async (actionCardResult: GenerateActionCardResult) => {
         if (actionCardResult?.success) {
             console.log("Fetching Affected Products")
             const idList = actionCardResult.cards.map(v => v.entities.product_ids).flat()
@@ -114,16 +118,6 @@ export default function ActionBoardPage() {
             init()
         }
     }, [initHasRun.current])
-
-    useEffect(() => {
-        if (initHasRun.current && !actionCardsHasRun.current) {
-            fetchActionCards()
-        }
-    }, [businessData, initHasRun])
-
-    useEffect(() => {
-        fetchAffectedProducts()
-    }, [actionCardResult])
 
     return (
         <Loader loading={loading} className="w-full">

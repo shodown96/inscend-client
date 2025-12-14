@@ -4,7 +4,7 @@ import type { Sale } from '@/types/sales';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-interface BusinessData {
+export interface BusinessData {
     sales: Sale[],
     products: Product[],
     customers: Customer[]

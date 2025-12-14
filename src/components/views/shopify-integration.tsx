@@ -13,6 +13,7 @@ export default function ShopifyIntegration() {
     const { integrations } = useIntegrationsStore()
 
     const initiateAuth = async () => {
+        setLoading(true)
         try {
             const res = await mainClient.get(API_ENDPOINTS.Shopify.InitiateAuth, {
                 params: { shop }
@@ -28,6 +29,8 @@ export default function ShopifyIntegration() {
             if (isAxiosError(error)) {
                 toast.error(error.response?.data.message)
             }
+        } finally {
+            setLoading(false)
         }
     }
     const importShopifyData = async () => {
@@ -84,6 +87,7 @@ export default function ShopifyIntegration() {
                                         <input
                                             type="text"
                                             value={shop}
+                                            disabled={loading}
                                             onChange={(e) => setShop(e.target.value)}
                                             placeholder="e.g. inscend-2.myshopify.com"
                                             className="border p-2 rounded"
@@ -92,6 +96,7 @@ export default function ShopifyIntegration() {
 
                                     <Button
                                         type="submit"
+                                        loading={loading}
                                         className="px-4 py-2 rounded bg-black text-white w-full">
                                         Connect Shopify Store
                                     </Button>

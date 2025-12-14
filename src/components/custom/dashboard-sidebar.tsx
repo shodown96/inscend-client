@@ -8,7 +8,7 @@ import { PATHS } from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth";
 import { cn, getInitials, getLimitedText } from "@/lib/utils";
 import { LogOut } from "lucide-react";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import Logo from "./logo";
 
 export default function DashboardSidebar({ }) {
@@ -28,7 +28,7 @@ export default function DashboardSidebar({ }) {
         <div className="bg-white w-[60px] lg:w-[270px] h-screen border px-2 py-4 flex flex-col justify-between">
             <div>
                 <div className="max-lg:hidden"><Logo /></div>
-                <img src="/logo.png" className="lg:hidden size-8 mx-auto" />
+                <Link to={"/"}><img src="/logo.png" className="lg:hidden size-8 mx-auto" /></Link>
 
                 <div className="flex flex-col gap-4 mt-4 max-lg:items-center">
                     {routes.map(v => (
