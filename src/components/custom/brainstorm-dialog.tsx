@@ -8,7 +8,7 @@ import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS } from "@/lib/constants"
 import { useBrainstormStore } from "@/lib/stores/brainstorm"
 import { ArrowLeft, Clock, X } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "../ui/button"
 import BrainstormChatView from "./brainstorm-chat-view"
 import BrainstormHistoryView from "./brainstorm-history-view"
@@ -16,18 +16,20 @@ import BrainstormSelect from "./brainstorm-select"
 import { OutlinedIcon, WhiteIcon } from "./brianstorm-icons"
 
 export default function BrainstormDialog({ outlined = false }) {
-  const { businessData, setBusinessData } = useBrainstormStore()
+  const initHasRun = useRef(false)
+  const { setBusinessData } = useBrainstormStore()
   const [currentView, setCurrentView] = useState<'chat' | 'history'>('chat');
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!businessData) {
+    if (!initHasRun.current) {
       mainClient.get(API_ENDPOINTS.Analytics.GetBusinessData)
         .then(r => {
           setBusinessData(r.data.result)
+          initHasRun.current = true
         })
     }
-  }, [businessData])
+  }, [initHasRun.current])
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
