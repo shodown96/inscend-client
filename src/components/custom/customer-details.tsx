@@ -120,7 +120,7 @@ const OverviewStats = ({ sales }: { sales: Sale[] }) => {
                 <MoreVertical className="text-gray-400 hover:text-gray-600" />
             </div>
 
-            <div className="flex justify-between items-center px-10 w-full pt-14">
+            <div className="flex justify-between items-center px-10 w-full lg:pt-14 max-lg:py-10">
 
                 <div>
                     <p className="text-xl font-bold text-gray-900 mb-1">
@@ -226,78 +226,78 @@ const PurchaseHistory = ({ sales }: { sales: Sale[] }) => {
 };
 
 // Purchase Behavior Component
-const PurchaseBehavior = () => {
-    return (
-        <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-start justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Purchase Behavior</h2>
-                <button className="text-gray-400 hover:text-gray-600">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                    </svg>
-                </button>
-            </div>
+// const PurchaseBehavior = () => {
+//     return (
+//         <div className="bg-white rounded-lg shadow p-6">
+//             <div className="flex items-start justify-between mb-6">
+//                 <h2 className="text-lg font-semibold text-gray-900">Purchase Behavior</h2>
+//                 <button className="text-gray-400 hover:text-gray-600">
+//                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+//                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+//                     </svg>
+//                 </button>
+//             </div>
 
-            <div className="space-y-6">
-                {/* Buying Pattern */}
-                <div>
-                    <div className="flex items-start justify-between mb-2">
-                        <div>
-                            <h3 className="text-base font-semibold text-gray-900">Buying Pattern</h3>
-                            <p className="text-sm text-gray-600">Regular</p>
-                        </div>
-                        <div className="flex items-center text-green-600">
-                            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                            </svg>
-                            <span className="text-sm">every 35-40 days</span>
-                        </div>
-                    </div>
-                </div>
+//             <div className="space-y-6">
+//                 {/* Buying Pattern */}
+//                 <div>
+//                     <div className="flex items-start justify-between mb-2">
+//                         <div>
+//                             <h3 className="text-base font-semibold text-gray-900">Buying Pattern</h3>
+//                             <p className="text-sm text-gray-600">Regular</p>
+//                         </div>
+//                         <div className="flex items-center text-green-600">
+//                             <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+//                             </svg>
+//                             <span className="text-sm">every 35-40 days</span>
+//                         </div>
+//                     </div>
+//                 </div>
 
-                {/* Shopping Days */}
-                <div>
-                    <div className="flex items-start justify-between mb-2">
-                        <div>
-                            <h3 className="text-base font-semibold text-gray-900">Shopping Days</h3>
-                            <p className="text-sm text-gray-600">Weekends</p>
-                        </div>
-                        <div className="flex items-center text-red-600">
-                            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                            </svg>
-                            <span className="text-sm">Sat-Sun</span>
-                        </div>
-                    </div>
-                </div>
+//                 {/* Shopping Days */}
+//                 <div>
+//                     <div className="flex items-start justify-between mb-2">
+//                         <div>
+//                             <h3 className="text-base font-semibold text-gray-900">Shopping Days</h3>
+//                             <p className="text-sm text-gray-600">Weekends</p>
+//                         </div>
+//                         <div className="flex items-center text-red-600">
+//                             <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+//                             </svg>
+//                             <span className="text-sm">Sat-Sun</span>
+//                         </div>
+//                     </div>
+//                 </div>
 
-                {/* Probability Section */}
-                <div className="pt-6 border-t border-gray-200">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="text-center flex-1">
-                            <p className="text-4xl font-bold text-gray-900 mb-1">68%</p>
-                            <p className="text-sm text-gray-600">Probability</p>
-                        </div>
-                        <div className="text-right flex-1">
-                            <p className="text-sm text-gray-600 mb-1">Next expected purchase:</p>
-                            <p className="text-base font-semibold text-gray-900">Oct 12-17, 2025</p>
-                        </div>
-                    </div>
+//                 {/* Probability Section */}
+//                 <div className="pt-6 border-t border-gray-200">
+//                     <div className="flex items-center justify-between mb-4">
+//                         <div className="text-center flex-1">
+//                             <p className="text-4xl font-bold text-gray-900 mb-1">68%</p>
+//                             <p className="text-sm text-gray-600">Probability</p>
+//                         </div>
+//                         <div className="text-right flex-1">
+//                             <p className="text-sm text-gray-600 mb-1">Next expected purchase:</p>
+//                             <p className="text-base font-semibold text-gray-900">Oct 12-17, 2025</p>
+//                         </div>
+//                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex gap-3 mt-6">
-                        <Button >
-                            Set Reminder
-                        </Button>
-                        <Button variant={'outline'} >
-                            Send Promo
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
+//                     {/* Action Buttons */}
+//                     <div className="flex gap-3 mt-6">
+//                         <Button >
+//                             Set Reminder
+//                         </Button>
+//                         <Button variant={'outline'} >
+//                             Send Promo
+//                         </Button>
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
 
 // Main Customer View Component
 export const CustomerView = ({ customer, sales }: { customer: Customer; sales: Sale[] }) => {
@@ -319,7 +319,7 @@ export const CustomerView = ({ customer, sales }: { customer: Customer; sales: S
                     <PurchaseHistory sales={sales} />
                 </div>
                 <div>
-                    <PurchaseBehavior />
+                    {/* <PurchaseBehavior /> */}
                 </div>
             </div>
         </div>
