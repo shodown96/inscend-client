@@ -6,7 +6,6 @@ import DashboardCard from "@/components/custom/dashboard-card";
 import { ImportModal } from "@/components/custom/import-modal";
 import SearchInput from "@/components/custom/input-search";
 import { TablePagination } from "@/components/custom/table-pagination";
-import { Button } from "@/components/ui/button";
 import useAPIQuery from "@/hooks/use-api-query";
 import { mainClient } from "@/lib/axios";
 import { API_ENDPOINTS, APP_NAME } from "@/lib/constants";
@@ -115,7 +114,6 @@ export default function CustomersPage() {
                     <div>Use our structured template to import products in bulk</div>
                     <div className="flex gap-2">
                         <ImportModal type="Customers" />
-                        <Button variant={'outline'}>Download Template</Button>
                     </div>
                 </div>
             )}

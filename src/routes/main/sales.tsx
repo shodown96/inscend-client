@@ -6,13 +6,11 @@ import SearchInput from "@/components/custom/input-search";
 import { SalesModal } from "@/components/custom/sales-modal";
 import { SalesTable } from "@/components/custom/sales-table";
 import { TablePagination } from "@/components/custom/table-pagination";
-import { Button } from "@/components/ui/button";
 import useAPIQuery from "@/hooks/use-api-query";
 import { mainClient } from "@/lib/axios";
 import { API_ENDPOINTS, APP_NAME } from "@/lib/constants";
 import { useSalesStore } from "@/lib/stores/sale";
 import { delayDebounceFn } from "@/lib/utils";
-import { Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function SalesPage() {
@@ -114,11 +112,7 @@ export default function SalesPage() {
                     <div>No sales yet.</div>
                     <div>Record your first sale manually or import your sales data to get started.</div>
                     <div className="flex gap-2">
-                        <Button>
-                            <Upload />
-                            <span>Import Sales</span>
-                        </Button>
-                        <Button variant={'outline'}>Download Template</Button>
+                        <ImportModal type="Sales" />
                     </div>
                 </div>
             )}
