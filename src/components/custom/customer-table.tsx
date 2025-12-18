@@ -1,9 +1,9 @@
-import type { Customer } from "@/types/customer";
-import { Checkbox } from "../ui/checkbox";
-import { Button } from "../ui/button";
-import { getInitials } from "@/lib/utils";
-import { useNavigate } from "react-router";
 import { PATHS } from "@/lib/constants";
+import { getInitials } from "@/lib/utils";
+import type { Customer } from "@/types/customer";
+import { useNavigate } from "react-router";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 
 // Customer Table Component
 export const CustomerTable = ({ customers }: { customers: Customer[] }) => {

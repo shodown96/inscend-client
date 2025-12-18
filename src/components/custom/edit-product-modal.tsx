@@ -6,26 +6,23 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS, CATEGORIES } from "@/lib/constants"
+import { useProductStore } from "@/lib/stores/product"
 import { ProductParamsSchema, type ProductParamsType } from "@/lib/validations/product"
 import { useFormik } from "formik"
-import { Plus } from "lucide-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { toast } from "sonner"
 import { CustomSelect } from "./custom-select"
-import { useProductStore } from "@/lib/stores/product"
 
-export function ProductModal({ buttonText = "Add Product", onFormSubmit = () => { } }: {
-  buttonText?: string,
+export function EditProductModal({ onFormSubmit = () => { } }: {
   onFormSubmit?: () => void
 }) {
   const closeRef = useRef<any>(null)
-  const { setProducts } = useProductStore()
+  const { setProducts, selectedProduct, isEditModalOpen, setIsEditModalOpen } = useProductStore()
   const formik = useFormik<ProductParamsType>({
     initialValues: {
       name: "",
@@ -38,7 +35,7 @@ export function ProductModal({ buttonText = "Add Product", onFormSubmit = () => 
       lowStockThreshold: 1,
     },
     onSubmit: async (values) => {
-      const result = await mainClient.post(API_ENDPOINTS.Products.Base, values)
+      const result = await mainClient.put(API_ENDPOINTS.Products.ById(selectedProduct?.id!), values)
       if (result.status === 201) {
         toast.success(result.data.message);
         await mainClient.get(API_ENDPOINTS.Products.Base)
@@ -59,6 +56,7 @@ export function ProductModal({ buttonText = "Add Product", onFormSubmit = () => 
     handleChange,
     handleSubmit,
     setFieldValue,
+    setValues,
     values,
     errors,
     touched,
@@ -66,19 +64,31 @@ export function ProductModal({ buttonText = "Add Product", onFormSubmit = () => 
     isValid
   } = formik;
 
+  useEffect(() => {
+    if (selectedProduct?.id) {
+      setValues({
+        ...values,
+        name: selectedProduct.name,
+        sku: selectedProduct.sku,
+        category: selectedProduct.category,
+        unitPrice: selectedProduct.unitPrice,
+        costPrice: selectedProduct.costPrice,
+        supplier: selectedProduct.supplier,
+        stock: selectedProduct.stock,
+        lowStockThreshold: selectedProduct.lowStockThreshold,
+      })
+    }
+  }, [selectedProduct])
+
+  if (!selectedProduct) return;
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus />
-          {buttonText}
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
       <DialogContent className="md:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Add New Product</DialogTitle>
+          <DialogTitle>Update Product</DialogTitle>
           <DialogDescription>
-            Enter product data
+            Enter your credentials to access your account
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

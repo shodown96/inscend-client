@@ -18,6 +18,9 @@ const ProductParams = z.object({
     costPrice: z.number({
         error: formatString(VALIDATION_MESSAGES.Required, "Cost Price"),
     }),
+    discountPrice: z.number({
+        error: formatString(VALIDATION_MESSAGES.Required, "Discount Price"),
+    }).optional(),
     stock: z.number({
         error: formatString(VALIDATION_MESSAGES.Required, "Stock"),
     }),

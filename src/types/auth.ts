@@ -16,6 +16,7 @@ export interface User {
   avatar?: Avatar;
   business?: Business,
   businessId?: string
+  tourTaken?: boolean
 }
 
 export interface Business {
