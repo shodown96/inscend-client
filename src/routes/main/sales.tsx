@@ -7,6 +7,7 @@ import { SalesModal } from "@/components/custom/sales-modal";
 import { SalesTable } from "@/components/custom/sales-table";
 import { TablePagination } from "@/components/custom/table-pagination";
 import useAPIQuery from "@/hooks/use-api-query";
+import useAppTour from "@/hooks/use-app-tour";
 import { mainClient } from "@/lib/axios";
 import { API_ENDPOINTS, APP_NAME } from "@/lib/constants";
 import { useSalesStore } from "@/lib/stores/sale";
@@ -22,6 +23,7 @@ export default function SalesPage() {
         revenueThisWeek: "0",
         returningCustomers: "0",
     })
+    useAppTour('sales')
 
     const fetchData = async () => {
         const r = await mainClient.get(API_ENDPOINTS.Sales.Base, {
@@ -57,7 +59,7 @@ export default function SalesPage() {
         fetchMetrics()
     }, [])
     return (
-        <div className="p-5 md:p-10">
+        <div className="p-5 md:p-10" id="sales-welcome">
             <title>{`Sales | ${APP_NAME}`}</title>
             <div className="flex justify-between md:items-center mb-4 max-md:flex-col gap-4">
                 <div>

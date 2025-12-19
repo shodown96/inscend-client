@@ -9,6 +9,7 @@ import SearchInput from "@/components/custom/input-search";
 import Loader from "@/components/custom/loader";
 import { TablePagination } from "@/components/custom/table-pagination";
 import useAPIQuery from "@/hooks/use-api-query";
+import useAppTour from "@/hooks/use-app-tour";
 import { mainClient } from "@/lib/axios";
 import { API_ENDPOINTS, APP_NAME } from "@/lib/constants";
 import { useCustomerStore } from "@/lib/stores/customer";
@@ -28,7 +29,7 @@ export default function CustomersPage() {
         vipCustomers: "0",
         atRisk: "0",
     })
-
+    useAppTour('customers', !loading)
     const fetchProductData = async () => {
         setLoading(true)
         const r = await mainClient.get(API_ENDPOINTS.Customers.ById(customerId!));
@@ -83,7 +84,7 @@ export default function CustomersPage() {
 
     return (
         <Loader loading={loading}>
-            <div className="p-5 md:p-10">
+            <div className="p-5 md:p-10" id="customers-welcome">
                 <title>{`Customers | ${APP_NAME}`}</title>
                 <div className="flex justify-between md:items-center mb-4 max-md:flex-col gap-4">
                     <div>

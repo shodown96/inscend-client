@@ -10,6 +10,7 @@ import Loader from "@/components/custom/loader"
 import { ProductModal } from "@/components/custom/product-modal"
 import SelectPill from "@/components/custom/select-pill"
 import { Button } from "@/components/ui/button"
+import useAppTour from "@/hooks/use-app-tour"
 import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS, APP_NAME, PATHS } from "@/lib/constants"
 import { useActionBoardStore } from "@/lib/stores/action-board"
@@ -42,6 +43,7 @@ export default function ActionBoardPage() {
         stockHealth: "0",
     })
     const navigate = useNavigate()
+    useAppTour('overview', !loading)
 
     const fetchProducts = async () => {
         console.log("Fetching Products")
@@ -169,67 +171,69 @@ export default function ActionBoardPage() {
                 </div>
                 <hr className="my-3" />
 
-                {view === 'Action card' ? (
-                    <>
-                        {actionCardResult?.total_cards ? (
-                            <div className="grid grid-cols-12 gap-4 h-[60vh]-overflow-auto pb-4">
-                                {actionCardResult.cards.map(v => (
-                                    <div key={v.card_id} className="col-span-12 md:col-span-6 xl:col-span-4" >
-                                        <ActionCardItem item={v} />
-                                    </div>
-                                ))}
+                <div id="sidebar-action-cards">
+                    {view === 'Action card' ? (
+                        <>
+                            {actionCardResult?.total_cards ? (
+                                <div className="grid grid-cols-12 gap-4 h-[60vh]-overflow-auto pb-4">
+                                    {actionCardResult.cards.map(v => (
+                                        <div key={v.card_id} className="col-span-12 md:col-span-6 xl:col-span-4" >
+                                            <ActionCardItem item={v} />
+                                        </div>
+                                    ))}
 
-                            </div>
-                        ) : (
-                            <>
-                                <div className="bg-white rounded p-3 py-10 flex flex-col gap-4 justify-center items-center text-center mb-4">
-                                    <EmptyIcon />
-                                    <div>Your Action Board is empty</div>
-                                    <div className="w-3/5">
-                                        Start by adding products to your inventory. This will show important insights, alerts, and actions to help you manage your business.
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <ProductModal buttonText="Add Your First Product" />
-                                        <ImportModal type="Products" />
-                                    </div>
                                 </div>
-                                <div className="flex gap-2">
-                                    <div className="rounded border p-4 flex flex-col gap-3 bg-white">
-                                        <AddProductIcon />
-                                        <div className="font-medium">Add Products</div>
-                                        <p className="text-sm">Start building your inventory by adding your first products.</p>
-                                        <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.INVENTORY)}>
-                                            <span>Get started</span>
-                                            <ArrowRight className="-ml-1" />
-                                        </Button>
+                            ) : (
+                                <>
+                                    <div className="bg-white rounded p-3 py-10 flex flex-col gap-4 justify-center items-center text-center mb-4">
+                                        <EmptyIcon />
+                                        <div>Your Action Board is empty</div>
+                                        <div className="md:w-3/5">
+                                            Start by adding products to your inventory. This will show important insights, alerts, and actions to help you manage your business.
+                                        </div>
+                                        <div className="flex gap-2 max-md:flex-col">
+                                            <ProductModal buttonText="Add Your First Product" />
+                                            <ImportModal type="Products" />
+                                        </div>
                                     </div>
-                                    <div className="rounded border p-4 flex flex-col gap-3 bg-white" >
-                                        <AddCustomerIcon />
-                                        <div className="font-medium">Add Customers</div>
-                                        <p className="text-sm">Keep track of your customers and their purchase history.</p>
-                                        <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.CUSTOMERS)}>
-                                            <span>Get started</span>
-                                            <ArrowRight className="-ml-1" />
-                                        </Button>
+                                    <div className="flex gap-2 flex-wrap">
+                                        <div className="rounded border p-4 flex flex-col gap-3 bg-white">
+                                            <AddProductIcon />
+                                            <div className="font-medium">Add Products</div>
+                                            <p className="text-sm">Start building your inventory by adding your first products.</p>
+                                            <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.INVENTORY)}>
+                                                <span>Get started</span>
+                                                <ArrowRight className="-ml-1" />
+                                            </Button>
+                                        </div>
+                                        <div className="rounded border p-4 flex flex-col gap-3 bg-white" >
+                                            <AddCustomerIcon />
+                                            <div className="font-medium">Add Customers</div>
+                                            <p className="text-sm">Keep track of your customers and their purchase history.</p>
+                                            <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.CUSTOMERS)}>
+                                                <span>Get started</span>
+                                                <ArrowRight className="-ml-1" />
+                                            </Button>
+                                        </div>
+                                        <div className="rounded border p-4 flex flex-col gap-3 bg-white">
+                                            <RecordSaleIcon />
+                                            <div className="font-medium">Record a Sale</div>
+                                            <p className="text-sm">Log your first sale and start tracking your revenue.</p>
+                                            <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.SALES)}>
+                                                <span>Get started</span>
+                                                <ArrowRight className="-ml-1" />
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <div className="rounded border p-4 flex flex-col gap-3 bg-white">
-                                        <RecordSaleIcon />
-                                        <div className="font-medium">Record a Sale</div>
-                                        <p className="text-sm">Log your first sale and start tracking your revenue.</p>
-                                        <Button variant={'ghost'} className="w-max" onClick={() => navigate(PATHS.SALES)}>
-                                            <span>Get started</span>
-                                            <ArrowRight className="-ml-1" />
-                                        </Button>
-                                    </div>
-                                </div>
-                            </>
-                        )}
-                    </>
-                ) : (
-                    <div className="flex justify-center items-center h-[50vh] text-lg font-medium">
-                        Coming soon
-                    </div>
-                )}
+                                </>
+                            )}
+                        </>
+                    ) : (
+                        <div className="flex justify-center items-center h-[50vh] text-lg font-medium">
+                            Coming soon
+                        </div>
+                    )}
+                </div>
             </div>
         </Loader>
     )

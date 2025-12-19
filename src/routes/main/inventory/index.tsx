@@ -8,6 +8,7 @@ import { ProductModal } from "@/components/custom/product-modal";
 import { ProductTable } from "@/components/custom/product-table";
 import { TablePagination } from "@/components/custom/table-pagination";
 import useAPIQuery from "@/hooks/use-api-query";
+import useAppTour from "@/hooks/use-app-tour";
 import { mainClient } from "@/lib/axios";
 import { API_ENDPOINTS, APP_NAME } from "@/lib/constants";
 import { useProductStore } from "@/lib/stores/product";
@@ -21,7 +22,7 @@ export default function InventoryPage() {
     const productId = searchParams.get("product")
     const { products, setProducts, openEditModalOpen } = useProductStore();
     const { query, pagination, setQuery, setPagination } = useAPIQuery()
-
+    useAppTour('products', !loading)
     const fetchData = async () => {
         const r = await mainClient.get(API_ENDPOINTS.Products.Base, {
             params: query
@@ -63,7 +64,7 @@ export default function InventoryPage() {
 
     return (
         <Loader loading={loading}>
-            <div className="p-5 md:p-10">
+            <div className="p-5 md:p-10" id="products-welcome">
                 <title>{`Inventory | ${APP_NAME}`}</title>
                 <div className="flex justify-between md:items-center mb-4 max-md:flex-col gap-4">
                     <div>

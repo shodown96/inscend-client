@@ -1,18 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BUSINESS_TYPES } from "@/lib/constants";
+import { BUSINESS_TYPES, PATHS } from "@/lib/constants";
 import { ProfileParamsSchema, type ProfileParamsType } from "@/lib/validations/auth";
 import { useFormik } from "formik";
 import { CustomSelect } from "../custom/custom-select";
 import { useEffect } from "react";
 import { useAuthStore } from "@/lib/stores/auth";
+import { useTourStore } from "@/lib/stores/tour";
+import { useNavigate } from "react-router";
+import { useTour } from "@reactour/tour";
+import { WelcomeGuide } from "@/lib/constants/tour";
 
 interface SignInFormProps {
     onFormSubmit: (values: ProfileParamsType) => void;
 }
 
 export default function ProfileForm({ onFormSubmit }: SignInFormProps) {
+    const navigate = useNavigate()
     const { user } = useAuthStore()
+    const { resetStore } = useTourStore()
+    const { setSteps, setCurrentStep } = useTour()
     const formik = useFormik<ProfileParamsType>({
         initialValues: {
             name: "",
@@ -96,13 +103,30 @@ export default function ProfileForm({ onFormSubmit }: SignInFormProps) {
                     className="w-full"
                     defaultValue={values.business.type}
                     onChange={v => setFieldValue("type", v)} />
-                <Button
-                    type="submit"
-                    className="w-max"
-                    loading={isSubmitting}
-                    disabled={!isValid} onClick={()=>handleSubmit()}>
-                    Update
-                </Button>
+                <div className="flex gap-4 items-center">
+                    <Button
+                        type="submit"
+                        className="w-max"
+                        loading={isSubmitting}
+                        disabled={!isValid} onClick={() => handleSubmit()}>
+                        Update
+                    </Button>
+                    <Button
+                        type="button"
+                        variant={'outline'}
+                        className="w-max"
+                        loading={isSubmitting}
+                        disabled={!isValid} onClick={() => {
+                            resetStore()
+                            navigate(PATHS.ACTION_BOARD)
+                            if (setSteps) {
+                                setCurrentStep(0)
+                                setSteps(WelcomeGuide)
+                            }
+                        }}>
+                        Restart Tour
+                    </Button>
+                </div>
 
             </form>
         </div>

@@ -2,6 +2,7 @@ import SettingPill from "@/components/custom/settings-pill"
 import ProfileForm from "@/components/forms/profile-form"
 import Integrations from "@/components/views/integrations"
 import TeamManagement from "@/components/views/team-management"
+import useAppTour from "@/hooks/use-app-tour"
 import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS, APP_NAME } from "@/lib/constants"
 import { useAuthStore } from "@/lib/stores/auth"
@@ -30,7 +31,7 @@ export default function SettingsPage() {
     const { setUser } = useAuthStore()
     const [searchParams, setSearchParams] = useSearchParams()
     const activeTab = searchParams.get("tab") as TabKey | null
-
+    useAppTour('settings')
     const handleFormSubmit = async (values: ProfileParamsType) => {
         try {
             const result = await mainClient.put(API_ENDPOINTS.Users.Profile, values);
@@ -53,7 +54,7 @@ export default function SettingsPage() {
         }
     }, [activeTab])
     return (
-        <div className="p-5 md:p-10">
+        <div className="p-5 md:p-10" id="settings-welcome">
             <title>{`Settings | ${APP_NAME}`}</title>
             <div className="flex justify-between items-center mb-4">
                 <div>
@@ -65,6 +66,7 @@ export default function SettingsPage() {
             <div className="flex items-center w-max border rounded-lg overflow-hidden mb-4">
                 {tabList.map((item) => (
                     <SettingPill
+                        id={`settings-${item}`}
                         key={item}
                         label={tabs[item]}
                         active={item === activeTab}
