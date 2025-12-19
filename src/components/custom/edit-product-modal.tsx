@@ -85,7 +85,7 @@ export function EditProductModal({ onFormSubmit = () => { } }: {
   return (
     <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
       <DialogContent className="md:max-w-3xl">
-        <DialogHeader>
+        <DialogHeader className="text-left">
           <DialogTitle>Update Product</DialogTitle>
           <DialogDescription>
             Enter your credentials to access your account
@@ -165,7 +165,7 @@ export function EditProductModal({ onFormSubmit = () => { } }: {
           <Input
             id="discountPrice"
             type="number"
-            label="DISCOUNT PRICE*"
+            label="DISCOUNT PRICE"
             onBlur={handleBlur}
             onChange={handleChange}
             containerClass="w-full"

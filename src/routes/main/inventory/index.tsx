@@ -63,9 +63,9 @@ export default function InventoryPage() {
 
     return (
         <Loader loading={loading}>
-            <div className="p-10">
+            <div className="p-5 md:p-10">
                 <title>{`Inventory | ${APP_NAME}`}</title>
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between md:items-center mb-4 max-md:flex-col gap-4">
                     <div>
                         <h4 className="text-xl font-semibold">Inventory Management</h4>
                         <p>Here's what's happening with your business.</p>
@@ -78,7 +78,7 @@ export default function InventoryPage() {
                 </div>
                 {products.length ? (
                     <>
-                        <div className="mb-4 flex justify-end">
+                        <div className="mb-4 flex md:justify-end">
                             <SearchInput
                                 value={query.search}
                                 onValueChange={v => setQuery({ search: v })}

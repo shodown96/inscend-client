@@ -13,7 +13,7 @@ import { useSearchParams } from "react-router"
 import { toast } from "sonner"
 
 const tabs = {
-    profile: "Profile & Store Info",
+    profile: "Profile",
     // billing: "Billing & Payments",
     // notifications: "Notifications",
     integrations: "Integrations",
@@ -53,7 +53,7 @@ export default function SettingsPage() {
         }
     }, [activeTab])
     return (
-        <div className="p-10">
+        <div className="p-5 md:p-10">
             <title>{`Settings | ${APP_NAME}`}</title>
             <div className="flex justify-between items-center mb-4">
                 <div>

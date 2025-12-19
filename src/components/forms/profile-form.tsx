@@ -55,7 +55,7 @@ export default function ProfileForm({ onFormSubmit }: SignInFormProps) {
     }, [user])
 
     return (
-        <div className="shadow p-3 rounded-lg bg-white">
+        <div className="w-full shadow p-3 rounded-lg bg-white">
             <form className="flex flex-col gap-5" >
                 <Input
                     id="name"

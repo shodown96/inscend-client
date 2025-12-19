@@ -4,7 +4,7 @@
 export default function DashboardHeader() {
     // const { user } = useAuthStore()
     return (
-        <div className="text-[#E6E7EC] bg-white px-4 py-2 pr-10 flex justify-end items-center border-b">
+        <div className="text-[#E6E7EC] bg-white px-4 py-2 pr-6 md:pr-10 flex justify-end items-center border-b">
             <div className="flex items-center gap-4">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="40" height="40" rx="20" fill="#FAFAFA" />

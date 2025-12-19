@@ -33,7 +33,10 @@ export default function BrainstormDialog({ outlined = false }) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <Button variant={outlined ? 'outline' : 'default'} onClick={() => setOpen(true)}>
+      <Button 
+      variant={outlined ? 'outline' : 'default'}
+       onClick={() => setOpen(true)}
+       className="w-max">
         {outlined ? <OutlinedIcon /> : <WhiteIcon />}
         <span>Brainstorm</span>
       </Button>

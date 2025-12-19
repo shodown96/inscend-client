@@ -9,7 +9,7 @@ import { getInitials } from "@/lib/utils";
 // Status Pill Component for Sales
 const StatusPill = ({ status }: { status: string }) => {
     return (
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+        <span className="w-max inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
             {status}
         </span>
     );
@@ -18,7 +18,7 @@ const StatusPill = ({ status }: { status: string }) => {
 // Payment Method Pill Component
 const PaymentMethodPill = ({ method }: { method: string }) => {
     return (
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
+        <span className="w-max inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
             {method}
         </span>
     );
@@ -298,7 +298,7 @@ export const SalesTable = ({ sales }: { sales: Sale[] }) => {
                                     </div>
                                 </td>
                                 <td className="px-4 py-4">
-                                    <PaymentMethodPill method={sale.paymentMethod} />
+                                    <PaymentMethodPill method={sale.paymentMethod||"Not specified"} />
                                 </td>
                                 <td className="px-4 py-4">
                                     <div className="text-sm text-gray-700">

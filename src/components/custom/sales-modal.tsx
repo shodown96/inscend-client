@@ -127,7 +127,7 @@ export function SalesModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => 
         </Button>
       </DialogTrigger>
       <DialogContent className="md:max-w-3xl">
-        <DialogHeader>
+        <DialogHeader className="text-left">
           <DialogTitle>Add New Sale</DialogTitle>
           <DialogDescription>
             Record a new sale transaction

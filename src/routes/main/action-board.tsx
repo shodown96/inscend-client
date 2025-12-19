@@ -122,8 +122,8 @@ export default function ActionBoardPage() {
     return (
         <Loader loading={loading} className="w-full">
             <title>{`Action Board | ${APP_NAME}`}</title>
-            <div className="p-10">
-                <div className="flex justify-between items-center mb-4">
+            <div className="p-5 md:p-10">
+                <div className="flex justify-between md:items-center mb-4 max-md:flex-col gap-4">
                     <div>
                         <h4 className="font-semibold text-xl">Welcome, {user?.name.split(" ")?.[0]}</h4>
                         <p className="text-sm">Here's what's happening with your business.</p>
@@ -154,7 +154,7 @@ export default function ActionBoardPage() {
                         className="col-span-4"
                     />
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between md:items-center max-md:flex-col gap-4">
                     <div className="flex items-center w-max border rounded-lg overflow-hidden">
                         {views.map(item => (
                             <SelectPill

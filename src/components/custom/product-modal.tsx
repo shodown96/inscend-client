@@ -69,13 +69,13 @@ export function ProductModal({ buttonText = "Add Product", onFormSubmit = () => 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="w-max">
           <Plus />
           {buttonText}
         </Button>
       </DialogTrigger>
       <DialogContent className="md:max-w-3xl">
-        <DialogHeader>
+        <DialogHeader className="text-left">
           <DialogTitle>Add New Product</DialogTitle>
           <DialogDescription>
             Enter product data
@@ -155,7 +155,7 @@ export function ProductModal({ buttonText = "Add Product", onFormSubmit = () => 
           <Input
             id="discountPrice"
             type="number"
-            label="DISCOUNT PRICE*"
+            label="DISCOUNT PRICE"
             onBlur={handleBlur}
             onChange={handleChange}
             containerClass="w-full"

@@ -15,12 +15,12 @@ export const CustomerTable = ({ customers }: { customers: Customer[] }) => {
     };
 
     return (
-        <div className="w-full bg-white rounded-lg shadow">
+        <div className="w-full overflow-x-auto bg-white rounded-lg shadow">
             <div className="divide-y divide-gray-200">
                 {customers.map((customer) => (
                     <div
                         key={customer.id}
-                        className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors"
+                        className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors gap-4"
                     >
                         <div className="flex items-center space-x-4 flex-1">
                             {/* Checkbox */}

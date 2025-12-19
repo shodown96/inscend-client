@@ -57,14 +57,14 @@ export default function SalesPage() {
         fetchMetrics()
     }, [])
     return (
-        <div className="p-10">
+        <div className="p-5 md:p-10">
             <title>{`Sales | ${APP_NAME}`}</title>
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between md:items-center mb-4 max-md:flex-col gap-4">
                 <div>
                     <h4 className="text-xl font-semibold">Sales Management</h4>
                     <p>Track and manage your sales transactions</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                     <SalesModal onFormSubmit={fetchMetrics} />
                     <ImportModal type="Sales" />
                     <BrainstormDialog outlined />
@@ -76,25 +76,28 @@ export default function SalesPage() {
                     title="Top Selling Today"
                     description={metrics.topSellingToday}
                     bordered
+                    className="col-span-4"
                 />
                 <DashboardCard
                     title="Total Sales Today"
                     description={metrics.totalSalesToday}
                     bordered
+                    className="col-span-4"
                 />
                 <DashboardCard
                     title="Revenue This Week"
                     description={metrics.revenueThisWeek}
                     bordered
+                    className="col-span-4"
                 />
-                <DashboardCard
+                {/* <DashboardCard
                     title="Returning Customers"
                     description={metrics.returningCustomers}
-                />
+                /> */}
             </div>
             {sales.length ? (
                 <>
-                    <div className="mb-4 flex justify-end">
+                    <div className="mb-4 flex md:justify-end">
                         <SearchInput
                             value={query.search}
                             onValueChange={v => setQuery({ search: v })}

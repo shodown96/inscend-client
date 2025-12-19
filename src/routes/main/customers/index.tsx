@@ -83,14 +83,14 @@ export default function CustomersPage() {
 
     return (
         <Loader loading={loading}>
-            <div className="p-10">
+            <div className="p-5 md:p-10">
                 <title>{`Customers | ${APP_NAME}`}</title>
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between md:items-center mb-4 max-md:flex-col gap-4">
                     <div>
                         <h4 className="font-semibold text-xl">Customers & Insights</h4>
                         <p className="text-sm">A list of every customer your store has interacted with.</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                         <CustomersModal />
                         <ImportModal type="Customers" />
                         <BrainstormDialog outlined />
@@ -101,25 +101,28 @@ export default function CustomersPage() {
                         title="Active Cutomers"
                         description={metrics.activeCustomers}
                         bordered
+                        className="col-span-4"
                     />
                     <DashboardCard
                         title="Dormant Customers"
                         description={metrics.dormantCustomers}
                         bordered
+                        className="col-span-4"
                     />
-                    <DashboardCard
+                    {/* <DashboardCard
                         title="VIP Customers"
                         description={metrics.vipCustomers}
                         bordered
-                    />
+                    /> */}
                     <DashboardCard
                         title="At Risk"
                         description={metrics.atRisk}
+                        className="col-span-4"
                     />
                 </div>
                 {customers.length ? (
                     <>
-                        <div className="mb-4 flex justify-end">
+                        <div className="mb-4 flex md:justify-end">
                             <SearchInput
                                 value={query.search}
                                 onValueChange={v => setQuery({ search: v })}
