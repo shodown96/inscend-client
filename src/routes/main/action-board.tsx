@@ -83,7 +83,11 @@ export default function ActionBoardPage() {
         console.log("Fetching Action Cards")
         toast.info("Fetching Action Cards")
         try {
-            const cardResult = await mainClient.post(API_ENDPOINTS.Analytics.GenerateActionCards, businessData);
+            const cardResult = await mainClient.post(API_ENDPOINTS.Analytics.GenerateActionCards, {
+                ...businessData,
+                "max_cards": 6,
+                "time_range": "week"
+            });
             const result: GenerateActionCardResult = cardResult.data
             if (result.success) {
                 setActionCardResult(result)

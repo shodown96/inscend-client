@@ -29,7 +29,7 @@ export default function CustomersPage() {
         vipCustomers: "0",
         atRisk: "0",
     })
-    useAppTour('customers', !loading)
+    useAppTour('customers', !loading && !customerId)
     const fetchProductData = async () => {
         setLoading(true)
         const r = await mainClient.get(API_ENDPOINTS.Customers.ById(customerId!));

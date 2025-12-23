@@ -22,7 +22,7 @@ export default function InventoryPage() {
     const productId = searchParams.get("product")
     const { products, setProducts, openEditModalOpen } = useProductStore();
     const { query, pagination, setQuery, setPagination } = useAPIQuery()
-    useAppTour('products', !loading)
+    useAppTour('products', !loading && !productId)
     const fetchData = async () => {
         const r = await mainClient.get(API_ENDPOINTS.Products.Base, {
             params: query

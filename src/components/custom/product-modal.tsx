@@ -155,7 +155,8 @@ export function ProductModal({ buttonText = "Add Product", onFormSubmit = () => 
           <Input
             id="discountPrice"
             type="number"
-            label="DISCOUNT PRICE"
+            label="DISCOUNT PRICE (OPTIONAL)"
+            placeholder="e.g $20"
             onBlur={handleBlur}
             onChange={handleChange}
             containerClass="w-full"

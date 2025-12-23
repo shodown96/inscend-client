@@ -56,10 +56,11 @@ export default function SignInForm({ onFormSubmit }: SignInFormProps) {
     useEffect(() => {
         if (user) {
             const checkAuth = async () => {
-                const result = await fetchUser()
-                if (result) {
-                    const PATH = searchParams.get("nextURL") || "/"
+                const user = await fetchUser()
+                if (user) {
+                    const PATH = searchParams.get("nextURL") || PATHS.ACTION_BOARD
                     toast.success(ERROR_MESSAGES.AlreadySignedIn, { icon: null })
+                    setUser(user)
                     navigate(PATH)
                 } else {
                     setUser(null)

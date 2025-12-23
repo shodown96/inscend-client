@@ -23,10 +23,10 @@ const ProductParams = z.object({
     }).optional(),
     stock: z.number({
         error: formatString(VALIDATION_MESSAGES.Required, "Stock"),
-    }),
+    }).min(0),
     lowStockThreshold: z.number({
         error: formatString(VALIDATION_MESSAGES.Required, "Low Stock Threshold"),
-    }),
+    }).min(0),
     supplier: z.string().optional(),
 });
 
