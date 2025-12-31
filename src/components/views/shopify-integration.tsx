@@ -16,7 +16,7 @@ export default function ShopifyIntegration() {
         setLoading(true)
         try {
             const res = await mainClient.get(API_ENDPOINTS.Shopify.InitiateAuth, {
-                params: { shop }
+                params: { shop: shop.replace("https://", "").replace("http://", "")  }
             })
 
             if (res.status === 200) {
