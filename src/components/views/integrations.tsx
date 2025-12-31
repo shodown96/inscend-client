@@ -12,13 +12,13 @@ export default function Integrations() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [loading, setLoading] = useState(true)
     const integratedShopify = searchParams.get("integratedShopify")
-    const { integrations, setIntegrations } = useIntegrationsStore()
+    const { setIntegrations } = useIntegrationsStore()
 
     const verifyShopifyIntegration = async () => {
-        if (integrations.shopify) {
-            setLoading(false)
-            return
-        };
+        // if (integrations.shopify) {
+        //     setLoading(false)
+        //     return
+        // };
         try {
             const res = await mainClient.get(API_ENDPOINTS.Shopify.VerfiySession)
 
