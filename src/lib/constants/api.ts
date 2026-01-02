@@ -66,7 +66,11 @@ export const API_ENDPOINTS = {
         AvgRevenue: `${BASE_API_ENDPOINT}/analytics/avg-revenue`,
         SalesDistribution: `${BASE_API_ENDPOINT}/analytics/sales-distribution`,
         ActionCards: `${BASE_API_ENDPOINT}/analytics/action-cards`,
-        GenerateActionCards: `${BASE_AI_ENDPOINT}/action-cards/generate`
+        GenerateActionCards: `${BASE_AI_ENDPOINT}/action-cards/generate`,
+        GetMonthlyProfits: `${BASE_API_ENDPOINT}/analytics/get-monthly-profits`,
+        GetOverviewMetrics: `${BASE_API_ENDPOINT}/analytics/get-overview-metrics`,
+        GetSalesByCountry: `${BASE_API_ENDPOINT}/analytics/get-sales-by-country`,
+
     },
     Shopify: {
         InitiateAuth: `${BASE_API_ENDPOINT}/shopify/auth/initiate`,

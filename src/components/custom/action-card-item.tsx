@@ -26,11 +26,13 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
         <span
           className={`
             text-xs px-3 py-1 rounded-full font-medium uppercase
-            ${item.priority === "high"
-              ? "bg-red-100 text-red-600"
-              : item.priority === "medium"
-                ? "bg-yellow-100 text-yellow-600"
-                : "bg-green-100 text-green-600"
+            ${item.priority === "critical" ?
+              "bg-red-200 text-red-700"
+              : item.priority === "high"
+                ? "bg-red-100 text-red-600"
+                : item.priority === "medium"
+                  ? "bg-yellow-100 text-yellow-600"
+                  : "bg-green-100 text-green-600"
             }
           `}
         >

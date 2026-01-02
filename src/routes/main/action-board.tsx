@@ -10,6 +10,7 @@ import Loader from "@/components/custom/loader"
 import { ProductModal } from "@/components/custom/product-modal"
 import SelectPill from "@/components/custom/select-pill"
 import { Button } from "@/components/ui/button"
+import ActionBoardOverview from "@/components/views/action-board-overview"
 import useAppTour from "@/hooks/use-app-tour"
 import { mainClient } from "@/lib/axios"
 import { API_ENDPOINTS, APP_NAME, PATHS } from "@/lib/constants"
@@ -18,7 +19,7 @@ import { useAuthStore } from "@/lib/stores/auth"
 import { useBusinessDataStore, type BusinessData } from "@/lib/stores/business"
 import { useProductStore } from "@/lib/stores/product"
 import type { GenerateActionCardResult } from "@/types/action-board"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, RefreshCw } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
@@ -34,7 +35,7 @@ export default function ActionBoardPage() {
     const [loading, setLoading] = useState(false)
     const { user } = useAuthStore()
     const { products, setProducts } = useProductStore()
-    const { setBusinessData } = useBusinessDataStore()
+    const { businessData, setBusinessData } = useBusinessDataStore()
     const { actionCardResult, setActionCardResult, setAffectedProducts } = useActionBoardStore()
     const [view, setView] = useState<ViewType>(views[0])
     const [metrics, setMetrics] = useState({
@@ -42,6 +43,15 @@ export default function ActionBoardPage() {
         activeCustomers: "0",
         stockHealth: "0",
     })
+    const [monthlyMetrics, setMonthlyMetrics] = useState({
+        thisMonth: "0",
+        lastMonth: "0",
+    })
+    const [monthlyOverviewMetrics, setmonthlyOverviewMetrics] = useState({
+        customersCount: "0",
+        averageOrderRevenue: "0",
+    })
+
     const navigate = useNavigate()
     useAppTour('overview', !loading)
 
@@ -62,6 +72,7 @@ export default function ActionBoardPage() {
     }
 
     const getFullBusinessData = async () => {
+        setLoading(true)
         console.log("Fetching Full Business Data")
         const result = await mainClient.get(API_ENDPOINTS.Business.MyFullData)
         console.log(result.data.result)
@@ -111,11 +122,42 @@ export default function ActionBoardPage() {
         }
     }
 
+
+    const fetchMonthlyProfits = async () => {
+        console.log("Fetching MonthlyProfits")
+        const r = await mainClient.get(API_ENDPOINTS.Analytics.GetMonthlyProfits);
+        if (r.data.result) {
+            setMonthlyMetrics(r.data.result)
+            console.log(r.data.result)
+        }
+    }
+
+    const fetchThisMonthCustomerMetrics = async () => {
+        console.log("Fetching MonthCustomerMetrics")
+        const r = await mainClient.get(API_ENDPOINTS.Analytics.GetOverviewMetrics);
+        if (r.data.result) {
+            setmonthlyOverviewMetrics(r.data.result)
+            console.log(r.data.result)
+        }
+    }
+    const fetchSalesByCountry = async () => {
+        console.log("Fetching SalesByCountry")
+        const r = await mainClient.get(API_ENDPOINTS.Analytics.GetSalesByCountry);
+        if (r.data.result) {
+            // setMetrics(r.data.result)
+            console.log(r.data.result)
+        }
+    }
+
     const init = async () => {
-        setLoading(true)
         await fetchProducts()
         await fetchMetrics()
-        await getFullBusinessData()
+        fetchMonthlyProfits()
+        fetchThisMonthCustomerMetrics()
+        fetchSalesByCountry()
+        if (!businessData) {
+            await getFullBusinessData()
+        }
         initHasRun.current = true
     }
 
@@ -156,7 +198,7 @@ export default function ActionBoardPage() {
                     /> */}
                     <DashboardCard
                         title="Stock Health"
-                        description={`${metrics.stockHealth}%`}
+                        description={`${metrics.stockHealth||0}%`}
                         className="col-span-4"
                     />
                 </div>
@@ -171,7 +213,10 @@ export default function ActionBoardPage() {
                             />
                         ))}
                     </div>
-                    <ProductModal buttonText={`Add ${products.length ? '' : 'your first'} product`} />
+                    <div className="flex gap-2 max-md:flex-col">
+                        <ProductModal buttonText={`Add ${products.length ? '' : 'your first'} product`} />
+                        <Button onClick={getFullBusinessData} className="w-max"><RefreshCw /> Refresh action cards</Button>
+                    </div>
                 </div>
                 <hr className="my-3" />
 
@@ -185,7 +230,6 @@ export default function ActionBoardPage() {
                                             <ActionCardItem item={v} />
                                         </div>
                                     ))}
-
                                 </div>
                             ) : (
                                 <>
@@ -233,9 +277,9 @@ export default function ActionBoardPage() {
                             )}
                         </>
                     ) : (
-                        <div className="flex justify-center items-center h-[50vh] text-lg font-medium">
-                            Coming soon
-                        </div>
+                        <ActionBoardOverview
+                            monthlyOverviewMetrics={monthlyOverviewMetrics}
+                            monthlyMetrics={monthlyMetrics} />
                     )}
                 </div>
             </div>
