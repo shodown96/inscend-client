@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { useNavigate } from "react-router";
 import { PATHS } from "@/lib/constants";
 
-export default function ActionCardItem({ item }: { item: ActionCard }) {
+export default function ActionCardItemCopy({ item }: { item: ActionCard }) {
   const { affectedProducts } = useActionBoardStore()
   const navigate = useNavigate()
 
@@ -23,7 +23,25 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
           {item.title}
         </h2>
 
-        <span
+       
+      </div>
+
+      {/* Primary Metric */}
+      <div className="flex items-center justify-between border rounded-xl p-3 bg-gray-50">
+        <div>
+          <p className="text-sm text-gray-500">{item.primary_metric.label}</p>
+          <p className="text-xl font-bold text-gray-900">
+            {!item.primary_metric.label.toLowerCase().includes("stock") ? item.primary_metric.currency : null}
+            {item.primary_metric.value.toLocaleString()}
+          </p>
+        </div>
+        {/* <div className="text-sm text-gray-400">
+          Revenue at Risk:{" "}
+          <span className="font-medium text-gray-800">
+            {item.revenue_at_risk?.toLocaleString()}
+          </span>
+        </div> */}
+         <span
           className={`
             text-xs px-3 py-1 rounded-full font-medium uppercase
             ${item.priority === "critical" ?
@@ -38,23 +56,6 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
         >
           {item.priority}
         </span>
-      </div>
-
-      {/* Primary Metric */}
-      <div className="flex items-center justify-between border rounded-xl p-3 bg-gray-50">
-        <div>
-          <p className="text-sm text-gray-500">{item.primary_metric.label}</p>
-          <p className="text-xl font-bold text-gray-900">
-            {item.primary_metric.currency}
-            {item.primary_metric.value.toLocaleString()}
-          </p>
-        </div>
-        <div className="text-sm text-gray-400">
-          Revenue at Risk:{" "}
-          <span className="font-medium text-gray-800">
-            {item.revenue_at_risk?.toLocaleString()}
-          </span>
-        </div>
       </div>
 
       {/* 
@@ -73,7 +74,10 @@ export default function ActionCardItem({ item }: { item: ActionCard }) {
       {/* Reasoning */}
       <div>
         {/* <p className="text-sm font-medium text-gray-800 mb-1">Why this matters</p> */}
-        <p className="text-sm text-gray-600">{item.reasoning}</p>
+        <p className="text-sm text-gray-600">
+          {item.reasoning}{" "}
+          {item.data_points.join(". ")}
+        </p>
       </div>
 
       <div className="flex items-center justify-between flex-wrap gap-2">
