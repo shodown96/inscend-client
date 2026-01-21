@@ -41,7 +41,7 @@ export default function BrainstormDialog({ outlined = false }) {
         {outlined ? <OutlinedIcon /> : <WhiteIcon />}
         <span>Brainstorm</span>
       </Button>
-      <DrawerContent className="p-0">
+      <DrawerContent className="p-0 max-h-[screen]">
         <DrawerHeader className="p-4 border-b">
           {currentView === 'chat' ? (
             <div className="flex items-center justify-between">

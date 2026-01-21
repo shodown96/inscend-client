@@ -6,10 +6,11 @@ import SalesIcon from "@/assets/icons/sidebar/sales.svg?react";
 import SettingsIcon from "@/assets/icons/sidebar/settings.svg?react";
 import { PATHS } from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth";
-import { cn, getInitials, getLimitedText } from "@/lib/utils";
+import { cn, getLimitedText } from "@/lib/utils";
 import { LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import Logo from "./logo";
+import UserAvatar from "./user-avatar";
 
 export default function DashboardSidebar({ }) {
     const { user, signOut } = useAuthStore()
@@ -48,13 +49,7 @@ export default function DashboardSidebar({ }) {
                 </div>
             </div>
             <div className="flex gap-2 items-center max-lg:flex-col">
-                {user?.avatar?.url ? (
-                    <img src={user.avatar.url} alt="" className="size-8 rounded-full" />
-                ) : (
-                    <div className="bg-primary text-white rounded-full size-8 flex justify-center items-center text-sm" onClick={signOut}>
-                        {getInitials(user?.name)}
-                    </div>
-                )}
+                <UserAvatar user={user} />
                 <div className="text-sm flex-1 max-lg:hidden">
                     <p>{user?.name}</p>
                     <p className="text-gray-400">{getLimitedText(`${user?.email}`, 20)}</p>

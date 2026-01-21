@@ -43,14 +43,6 @@ export default function ActionBoardPage() {
         activeCustomers: "0",
         stockHealth: "0",
     })
-    const [monthlyMetrics, setMonthlyMetrics] = useState({
-        thisMonth: "0",
-        lastMonth: "0",
-    })
-    const [monthlyOverviewMetrics, setmonthlyOverviewMetrics] = useState({
-        customersCount: "0",
-        averageOrderRevenue: "0",
-    })
 
     const navigate = useNavigate()
     useAppTour('overview', !loading)
@@ -122,24 +114,6 @@ export default function ActionBoardPage() {
         }
     }
 
-
-    const fetchMonthlyProfits = async () => {
-        console.log("Fetching MonthlyProfits")
-        const r = await mainClient.get(API_ENDPOINTS.Analytics.GetMonthlyProfits);
-        if (r.data.result) {
-            setMonthlyMetrics(r.data.result)
-            console.log(r.data.result)
-        }
-    }
-
-    const fetchThisMonthCustomerMetrics = async () => {
-        console.log("Fetching MonthCustomerMetrics")
-        const r = await mainClient.get(API_ENDPOINTS.Analytics.GetOverviewMetrics);
-        if (r.data.result) {
-            setmonthlyOverviewMetrics(r.data.result)
-            console.log(r.data.result)
-        }
-    }
     const fetchSalesByCountry = async () => {
         console.log("Fetching SalesByCountry")
         const r = await mainClient.get(API_ENDPOINTS.Analytics.GetSalesByCountry);
@@ -152,8 +126,6 @@ export default function ActionBoardPage() {
     const init = async () => {
         await fetchProducts()
         await fetchMetrics()
-        fetchMonthlyProfits()
-        fetchThisMonthCustomerMetrics()
         fetchSalesByCountry()
         if (!businessData) {
             await getFullBusinessData()
@@ -198,7 +170,7 @@ export default function ActionBoardPage() {
                     /> */}
                     <DashboardCard
                         title="Stock Health"
-                        description={`${metrics.stockHealth||0}%`}
+                        description={`${metrics.stockHealth || 0}%`}
                         className="col-span-4"
                     />
                 </div>
@@ -213,9 +185,11 @@ export default function ActionBoardPage() {
                             />
                         ))}
                     </div>
-                    <div className="flex gap-2 max-md:flex-col">
+                    <div className="flex gap-2">
                         <ProductModal buttonText={`Add ${products.length ? '' : 'your first'} product`} />
-                        <Button onClick={getFullBusinessData} className="w-max"><RefreshCw /> Refresh action cards</Button>
+                        <Button onClick={getFullBusinessData} className="w-max"><RefreshCw />
+                        Refresh cards
+                        </Button>
                     </div>
                 </div>
                 <hr className="my-3" />
@@ -277,9 +251,7 @@ export default function ActionBoardPage() {
                             )}
                         </>
                     ) : (
-                        <ActionBoardOverview
-                            monthlyOverviewMetrics={monthlyOverviewMetrics}
-                            monthlyMetrics={monthlyMetrics} />
+                        <ActionBoardOverview />
                     )}
                 </div>
             </div>

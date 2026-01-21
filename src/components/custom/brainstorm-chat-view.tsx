@@ -149,13 +149,13 @@ export default function BrainstormChatView() {
               >
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${msg.role === "user"
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-100 text-gray-900"
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-900"
                     }`}
                 >
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                   <p className="text-xs mt-1 opacity-70">
-                    {msg?.timestamp?.toLocaleTimeString ?msg?.timestamp?.toLocaleTimeString(): "-"}
+                    {msg?.timestamp?.toLocaleTimeString ? msg?.timestamp?.toLocaleTimeString() : "-"}
                   </p>
                 </div>
               </div>
@@ -185,6 +185,12 @@ export default function BrainstormChatView() {
             onChange={(e) => setMessage(e.target.value)}
             disabled={isLoading}
             containerClass="w-full"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
           />
           <Button onClick={handleSendMessage} disabled={isLoading || !message.trim() || !businessData}>
             <Send className="w-4 h-4" />
