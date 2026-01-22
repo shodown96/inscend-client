@@ -79,5 +79,9 @@ export const API_ENDPOINTS = {
         AuthCallback: `${BASE_API_ENDPOINT}/shopify/auth/callback`,
         Import: `${BASE_API_ENDPOINT}/shopify/import`,
         VerfiySession: `${BASE_API_ENDPOINT}/shopify/verify-session`,
+    },
+    Tasks: {
+        Base: `${BASE_API_ENDPOINT}/tasks`,
+        ById: (id: string) => `${BASE_API_ENDPOINT}/tasks/${id}`,
     }
 }

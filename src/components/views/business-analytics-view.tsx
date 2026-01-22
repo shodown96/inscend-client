@@ -68,7 +68,7 @@ function MetricCard({
                     {deltaLabel ? <div className="mt-2 text-xs text-slate-500">{deltaLabel}</div> : null}
                 </div>
                 {actionLabel ? (
-                    <Button variant="outline" size="sm" onClick={onAction} className="rounded-xl">
+                    <Button variant="outline" size="sm" onClick={onAction}>
                         {actionLabel}
                     </Button>
                 ) : null}
@@ -121,7 +121,7 @@ function ActionRow({
                 >
                     {primaryLabel}
                 </Button>
-                <Button variant="outline" className="rounded-xl" size="sm" onClick={onSecondary}>
+                <Button variant="outline" size="sm" onClick={onSecondary}>
                     {secondaryLabel}
                 </Button>
             </div>
@@ -176,7 +176,7 @@ export function BusinessInsightsView({
                         >
                             Ask Brainstorm
                         </Button> */}
-                        <Button variant="outline" className="rounded-xl" onClick={onViewFullReport}>
+                        <Button variant="outline" onClick={onViewFullReport}>
                             View Full Report
                         </Button>
                     </div>
