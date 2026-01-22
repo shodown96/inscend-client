@@ -30,3 +30,12 @@ export type AppIcon = LucideIcon | React.FunctionComponent<React.SVGProps<SVGSVG
     desc?: string;
     descId?: string;
 }>
+
+export interface BackgroundTask {
+    id: string;
+    businessId: string;
+    type: string;
+    status: 'completed' | 'failed' | 'pending' | 'running';
+    createdAt: string;
+    updatedAt: string;
+}

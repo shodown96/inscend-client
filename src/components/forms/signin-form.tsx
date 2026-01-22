@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface SignInFormProps {
-    onFormSubmit: (values: SignInParamsType) => void;
+    onFormSubmit: (values: SignInParamsType) => Promise<void>;
 }
 
 export default function SignInForm({ onFormSubmit }: SignInFormProps) {
@@ -34,7 +34,9 @@ export default function SignInForm({ onFormSubmit }: SignInFormProps) {
         },
         onSubmit: async (values) => {
             if (!checking) {
-                onFormSubmit(values)
+                setSubmitting(true)
+                await onFormSubmit(values)
+                setSubmitting(false)
             }
         },
         validateOnBlur: true,
@@ -49,6 +51,7 @@ export default function SignInForm({ onFormSubmit }: SignInFormProps) {
         errors,
         touched,
         isSubmitting,
+        setSubmitting,
         isValid
     } = formik;
 

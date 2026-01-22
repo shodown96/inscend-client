@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { mainClient, multipartClient } from "@/lib/axios"
 import { API_ENDPOINTS, BASE_AI_ENDPOINT } from "@/lib/constants"
+import { waitForTaskCompletion } from "@/lib/polling"
 import { useAuthStore } from "@/lib/stores/auth"
 import { useCustomerStore } from "@/lib/stores/customer"
 import { useProductStore } from "@/lib/stores/product"
@@ -89,7 +90,7 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmitV2 = async () => {
     if (false) { handleSubmitV1() }
     if (!selectedFile) return toast.error("Please select a file first.")
     setUploading(true)
@@ -142,6 +143,168 @@ export function ImportModal({ type }: { type: 'Sales' | 'Customers' | 'Products'
       setUploadProgress(0)
     }
   }
+
+  const handleSubmitV3 = async () => {
+    if (false) { handleSubmitV2() }
+    if (!selectedFile) return toast.error("Please select a file first.")
+    setUploading(true)
+
+    const values = new FormData()
+    values.append("file", selectedFile)
+
+    try {
+      let path = "csv/extract"
+      if (selectedFile.type.includes("image")) {
+        path = "image/extract"
+      }
+      if (selectedFile.type.includes("pdf")) {
+        path = "image/extract-pdf"
+      }
+      const result = await multipartClient.post(`${BASE_AI_ENDPOINT}/${path}`, values, {
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent.total) return
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          setUploadProgress(percent)
+        },
+        withCredentials: false
+      })
+
+      if (result.status === 200) {
+        const extractedData = result.data.data
+        console.log(extractedData)
+        toast.success(result.data.message)
+        const rawType = type.toLowerCase().slice(0, type.length - 1);
+        const mappedResult = await mainClient.post(API_ENDPOINTS.Business.AddImportedData(rawType),
+          extractedData.map((v: any) => ({ ...v, businessId: user?.businessId })))
+        if (mappedResult.status === 200) {
+          const response = await mainClient.get(API_ENDPOINTS?.[type].Base)
+
+          if (type === 'Products') setProducts(response.data.result.items)
+          if (type === 'Customers') setCustomers(response.data.result.items)
+          if (type === 'Sales') setSales(response.data.result.items)
+
+          setUploading(false)
+          setSelectedFile(null)
+          setUploadProgress(100)
+          sessionStorage.removeItem(`${type}-upload-progress`)
+          closeRef.current?.click()
+        }
+      }
+    } catch (error: any) {
+      console.error(error)
+      toast.error(error?.response?.data?.message || "Upload failed.")
+    } finally {
+      setUploading(false)
+      setUploadProgress(0)
+    }
+  }
+
+
+const handleSubmit = async () => {
+  if (false) {
+    handleSubmitV3()
+  }
+
+  if (!selectedFile) return toast.error("Please select a file first.");
+
+  setUploading(true);
+
+  const values = new FormData();
+  values.append("file", selectedFile);
+
+  // optional but recommended: lets you cancel polling if the modal closes/unmounts
+  const controller = new AbortController();
+
+  try {
+    let path = "csv/extract";
+    if (selectedFile.type.includes("image")) path = "image/extract";
+    if (selectedFile.type.includes("pdf")) path = "image/extract-pdf";
+
+    // 1) Upload + extract
+    const result = await multipartClient.post(`${BASE_AI_ENDPOINT}/${path}`, values, {
+      onUploadProgress: (progressEvent) => {
+        if (!progressEvent.total) return;
+        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        setUploadProgress(percent);
+      },
+      withCredentials: false,
+    });
+
+    if (result.status !== 200) {
+      toast.error(result.data?.message || "Upload failed.");
+      return;
+    }
+
+    const extractedData = result.data.data;
+    toast.success(result.data.message);
+
+    // 2) Kick off background import task (API should return { taskId, status })
+    const rawType = type.toLowerCase().slice(0, type.length - 1);
+
+    const start = await mainClient.post(
+      API_ENDPOINTS.Business.AddImportedDataBg(rawType),
+      extractedData.map((v: any) => ({ ...v, businessId: user?.businessId }))
+    );
+
+    if (start.status !== 200) {
+      toast.error(start.data?.message || "Import failed to start.");
+      return;
+    }
+
+    const taskId: string | undefined =
+      start.data?.result?.taskId ?? start.data?.result?.id; // adjust if your API shape differs
+    const startStatus: string | undefined = start.data?.result?.status;
+
+    // If your endpoint doesn't return a taskId, it's not async.
+    if (!taskId) {
+      // fallback to old behavior: assume import finished synchronously
+      // const response = await mainClient.get(API_ENDPOINTS?.[type].Base);
+      // if (type === "Products") setProducts(response.data.result.items);
+      // if (type === "Customers") setCustomers(response.data.result.items);
+      // if (type === "Sales") setSales(response.data.result.items);
+
+      // setSelectedFile(null);
+      // setUploadProgress(100);
+      // sessionStorage.removeItem(`${type}-upload-progress`);
+      // closeRef.current?.click();
+      return;
+    }
+
+    // 3) Wait for completion (polling)
+    if (startStatus !== "completed") {
+      await waitForTaskCompletion({
+        taskId,
+        intervalMs: 2000,
+        timeoutMs: 10 * 60 * 1000,
+        signal: controller.signal,
+        // If your waitForTaskCompletion expects a poll function, use this:
+        // poll: pollTaskStatus,
+      });
+    }
+
+    // 4) Refresh UI after completion
+    const response = await mainClient.get(API_ENDPOINTS?.[type].Base);
+
+    if (type === "Products") setProducts(response.data.result.items);
+    if (type === "Customers") setCustomers(response.data.result.items);
+    if (type === "Sales") setSales(response.data.result.items);
+
+    setSelectedFile(null);
+    setUploadProgress(100);
+    sessionStorage.removeItem(`${type}-upload-progress`);
+    closeRef.current?.click();
+  } catch (error: any) {
+    console.error(error);
+    if (error?.name !== "AbortError") {
+      toast.error(error?.response?.data?.message || "Upload failed.");
+    }
+  } finally {
+    setUploading(false);
+    setUploadProgress(0);
+    // controller.abort(); // optional cleanup
+  }
+};
+
 
   // Persist progress across reloads
   useEffect(() => {

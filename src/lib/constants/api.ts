@@ -46,6 +46,8 @@ export const API_ENDPOINTS = {
         MyHealth: `${BASE_API_ENDPOINT}/business/mine/health`,
         MyFullData: `${BASE_API_ENDPOINT}/business/mine/full-data`,
         ById: (id: string) => `${BASE_API_ENDPOINT}/business/${id}`,
+        AddImportedData: (type: string) => `${BASE_API_ENDPOINT}/business/add-imported/${type}`,
+        AddImportedDataBg: (type: string) => `${BASE_API_ENDPOINT}/business/add-imported-bg/${type}`,
     },
     Users: {
         Profile: `${BASE_API_ENDPOINT}/users/profile`
@@ -78,6 +80,7 @@ export const API_ENDPOINTS = {
         InitiateAuth: `${BASE_API_ENDPOINT}/shopify/auth/initiate`,
         AuthCallback: `${BASE_API_ENDPOINT}/shopify/auth/callback`,
         Import: `${BASE_API_ENDPOINT}/shopify/import`,
+        ImportBg: `${BASE_API_ENDPOINT}/shopify/import-bg`,
         VerfiySession: `${BASE_API_ENDPOINT}/shopify/verify-session`,
     },
     Tasks: {

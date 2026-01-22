@@ -1,6 +1,7 @@
 import ShopifyLogo from "@/assets/icons/shopify-logo.svg?react"
 import { mainClient } from "@/lib/axios"
-import { API_ENDPOINTS } from "@/lib/constants"
+import { API_ENDPOINTS, ERROR_MESSAGES } from "@/lib/constants"
+import { waitForTaskCompletion } from "@/lib/polling"
 import { useIntegrationsStore } from "@/lib/stores/integrations"
 import { isAxiosError } from "axios"
 import { useState } from "react"
@@ -16,7 +17,7 @@ export default function ShopifyIntegration() {
         setLoading(true)
         try {
             const res = await mainClient.get(API_ENDPOINTS.Shopify.InitiateAuth, {
-                params: { shop: shop.replace("https://", "").replace("http://", "")  }
+                params: { shop: shop.replace("https://", "").replace("http://", "") }
             })
 
             if (res.status === 200) {
@@ -33,24 +34,77 @@ export default function ShopifyIntegration() {
             setLoading(false)
         }
     }
-    const importShopifyData = async () => {
-        setLoading(true)
-        try {
-            const res = await mainClient.get(API_ENDPOINTS.Shopify.Import)
+    // const importShopifyData = async () => {
+    //     setLoading(true)
+    //     try {
+    //         const res = await mainClient.get(API_ENDPOINTS.Shopify.Import)
 
-            if (res.status === 200) {
-                toast.success(res.data.message)
-            } else {
-                toast.error(res.data.message)
+    //         if (res.status === 200) {
+    //             toast.success(res.data.message)
+    //         } else {
+    //             toast.error(res.data.message)
+    //         }
+    //     } catch (error) {
+    //         if (isAxiosError(error)) {
+    //             toast.error(error.response?.data.message)
+    //         }
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
+    const importShopifyData = async () => {
+        setLoading(true);
+        const controller = new AbortController();
+
+        try {
+            const res = await mainClient.get(API_ENDPOINTS.Shopify.ImportBg);
+
+            if (res.status !== 200) {
+                toast.error(res.data?.message ?? ERROR_MESSAGES.ServerError);
+                return;
+            }
+
+
+            const taskId: string | undefined = res.data?.result?.taskId;
+            const initialStatus: string | undefined = res.data?.result?.status;
+
+            if (!taskId) {
+                toast.error(ERROR_MESSAGES.ServerError);
+                return;
+            }
+
+            // if API ever returns completed immediately
+            if (initialStatus === "completed") {
+                toast.success(res.data.message);
+                return;
+            }
+
+            const success = await waitForTaskCompletion({
+                taskId,
+                intervalMs: 2000,
+                timeoutMs: 10 * 60 * 1000,
+                signal: controller.signal,
+            });
+
+            if (success) {
+                toast.success(res.data.message);
             }
         } catch (error) {
+            if ((error as any)?.name === "AbortError") return;
+
             if (isAxiosError(error)) {
-                toast.error(error.response?.data.message)
+                toast.error(error.response?.data?.message ?? ERROR_MESSAGES.ServerError);
+            } else {
+                toast.error((error as Error)?.message ?? ERROR_MESSAGES.ServerError);
             }
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+
+        // optional: expose cancel (store it in a ref if you want a Cancel button)
+        return () => controller.abort();
+    };
+
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!shop.trim()) {
