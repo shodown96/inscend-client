@@ -70,6 +70,8 @@ export const API_ENDPOINTS = {
         GetMonthlyProfits: `${BASE_API_ENDPOINT}/analytics/get-monthly-profits`,
         GetOverviewMetrics: `${BASE_API_ENDPOINT}/analytics/get-overview-metrics`,
         GetSalesByCountry: `${BASE_API_ENDPOINT}/analytics/get-sales-by-country`,
+        GetBusinessIssues: `${BASE_API_ENDPOINT}/analytics/get-business-issues`,
+        GetBusinessAnalytics: `${BASE_API_ENDPOINT}/analytics/get-business-analytics`,
 
     },
     Shopify: {
