@@ -6,8 +6,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { mainClient } from "@/lib/axios"
@@ -18,19 +17,45 @@ import { SaleParamsSchema, type SaleParamsType } from "@/lib/validations/sale"
 import type { Customer } from "@/types/customer"
 import type { Product } from "@/types/product"
 import { useFormik } from "formik"
-import { Plus } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Textarea } from "../ui/textarea"
 import { CustomSelect } from "./custom-select"
 
-export function SalesModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => void }) {
+export function EditSalesModal({ onFormSubmit = () => { } }: {
+  onFormSubmit?: () => void
+}) {
   const closeRef = useRef<any>(null)
-  const { setSales } = useSalesStore()
   const [products, setProducts] = useState<Product[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
   const [searchProductTerm, setSearchProductTerm,] = useState("")
   const [searchCustomerTerm, setSearchCustomerTerm,] = useState("")
+  const { setSales, selectedSale, isEditModalOpen, setIsEditModalOpen } = useSalesStore()
+  const formik = useFormik<SaleParamsType>({
+    initialValues: {
+      productId: "",
+      customerId: "",
+      quantity: 1,
+      paymentMethod: "",
+      unitPrice: 0,
+      notes: "",
+    },
+    onSubmit: async (values) => {
+      const result = await mainClient.put(API_ENDPOINTS.Sales.ById(selectedSale?.id!), values)
+      if (result.status === 201) {
+        toast.success(result.data.message);
+        await mainClient.get(API_ENDPOINTS.Products.Base)
+          .then(r => {
+            setSales(r.data.result.items)
+            onFormSubmit()
+          })
+        closeRef.current?.click()
+        formik.resetForm()
+      }
+    },
+    validateOnBlur: true,
+    validationSchema: SaleParamsSchema,
+  });
 
   const fetchProducts = async () => {
     const r = await mainClient.get(API_ENDPOINTS.Products.Base, {
@@ -49,43 +74,32 @@ export function SalesModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => 
     }
   }
 
-  const formik = useFormik<SaleParamsType>({
-    initialValues: {
-      productId: "",
-      customerId: "",
-      quantity: 1,
-      paymentMethod: "",
-      unitPrice: 0,
-      notes: "",
-    },
-    onSubmit: async (values) => {
-      const result = await mainClient.post(API_ENDPOINTS.Sales.Base, values)
-      if (result.status === 201) {
-        toast.success(result.data.message);
-        await mainClient.get(API_ENDPOINTS.Sales.Base)
-          .then(r => {
-            setSales(r.data.result.items)
-            onFormSubmit()
-          })
-        closeRef.current?.click()
-        formik.resetForm()
-      }
-    },
-    validateOnBlur: true,
-    validationSchema: SaleParamsSchema,
-  });
-
   const {
     handleBlur,
     handleChange,
     handleSubmit,
     setFieldValue,
+    setValues,
     values,
     errors,
     touched,
     isSubmitting,
     isValid
   } = formik;
+
+  useEffect(() => {
+    if (selectedSale?.id) {
+      setValues({
+        productId: selectedSale.productId,
+        customerId: selectedSale.customerId || "",
+        quantity: selectedSale.quantity,
+        paymentMethod: selectedSale.paymentMethod,
+        unitPrice: selectedSale.unitPrice,
+        notes: selectedSale.notes,
+      })
+    }
+  }, [selectedSale])
+
 
   useEffect(() => {
     if (searchCustomerTerm.length) {
@@ -119,19 +133,16 @@ export function SalesModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => 
     }
   }, [values.productId]);
 
+
+  if (!selectedSale) return;
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus />
-          Add Sale
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
       <DialogContent className="md:max-w-3xl">
         <DialogHeader className="text-left">
-          <DialogTitle>Add New Sale</DialogTitle>
+          <DialogTitle>Update Product</DialogTitle>
           <DialogDescription>
-            Record a new sale transaction
+            Enter your credentials to access your account
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -145,6 +156,7 @@ export function SalesModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => 
               containerClass="w-full"
               className="w-full"
               placeholder={"Select a product to sell"}
+              defaultValue={selectedSale.productId || ""}
               options={products.map(v => ({ label: v.name, value: v.id }))}
             />
             <Input
@@ -179,6 +191,7 @@ export function SalesModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => 
               className="w-full"
               onChange={v => setFieldValue('paymentMethod', v)}
               placeholder={"Select a Payment Method"}
+              defaultValue={selectedSale.paymentMethod}
               options={PAYMENT_METHODS}
             />
           </div>
@@ -192,6 +205,7 @@ export function SalesModal({ onFormSubmit = () => { } }: { onFormSubmit?: () => 
               containerClass="w-full"
               className="w-full"
               placeholder={"Select a customer"}
+              defaultValue={selectedSale.customerId || ""}
               options={customers.map(v => ({ label: v.name, value: v.id }))}
             />
             <Input

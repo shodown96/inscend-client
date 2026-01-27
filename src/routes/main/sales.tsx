@@ -1,6 +1,7 @@
 import EmptySalesIcon from "@/assets/icons/empty-sales.svg?react";
 import BrainstormDialog from "@/components/custom/brainstorm-dialog";
 import DashboardCard from "@/components/custom/dashboard-card";
+import { EditSalesModal } from "@/components/custom/edit-sales-modal";
 import { ImportModal } from "@/components/custom/import-modal";
 import SearchInput from "@/components/custom/input-search";
 import { SalesModal } from "@/components/custom/sales-modal";
@@ -97,14 +98,14 @@ export default function SalesPage() {
                     description={metrics.returningCustomers}
                 /> */}
             </div>
+            <div className="mb-4 flex md:justify-end">
+                <SearchInput
+                    value={query.search}
+                    onValueChange={v => setQuery({ search: v })}
+                />
+            </div>
             {sales.length ? (
                 <>
-                    <div className="mb-4 flex md:justify-end">
-                        <SearchInput
-                            value={query.search}
-                            onValueChange={v => setQuery({ search: v })}
-                        />
-                    </div>
                     <SalesTable sales={sales} />
                     <TablePagination
                         pagination={pagination}
@@ -121,6 +122,7 @@ export default function SalesPage() {
                     </div>
                 </div>
             )}
+            <EditSalesModal />
         </div>
     )
 }

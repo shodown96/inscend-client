@@ -45,7 +45,7 @@ export default function CustomersPage() {
         const r = await mainClient.get(API_ENDPOINTS.Customers.Base, {
             params: query
         });
-        if (r.status === 200) {
+        if (r.data.result.items) {
             setCustomers(r.data.result.items)
             setPagination({
                 total: r.data.result.total,
@@ -121,14 +121,14 @@ export default function CustomersPage() {
                         className="col-span-4"
                     />
                 </div>
+                <div className="mb-4 flex md:justify-end">
+                    <SearchInput
+                        value={query.search}
+                        onValueChange={v => setQuery({ search: v })}
+                    />
+                </div>
                 {customers.length ? (
                     <>
-                        <div className="mb-4 flex md:justify-end">
-                            <SearchInput
-                                value={query.search}
-                                onValueChange={v => setQuery({ search: v })}
-                            />
-                        </div>
                         <CustomerTable customers={customers} />
                         <TablePagination
                             pagination={pagination}
