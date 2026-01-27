@@ -16,7 +16,7 @@ export default function ActionCardItemCopy({ item }: { item: ActionCard }) {
     }
   }
   return (
-    <div className="w-full rounded-2xl border p-5 shadow-sm bg-white space-y-4">
+    <div className="max-md:w-[300px] w-full rounded-2xl border p-5 shadow-sm bg-white space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text- font-semibold text-gray-900 mt-1">

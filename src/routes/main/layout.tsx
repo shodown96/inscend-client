@@ -1,3 +1,4 @@
+import DashboardChecklistModal from '@/components/custom/dashboard-checklist'
 import DashboardHeader from '@/components/custom/dashboard-header'
 import DashboardSidebar from '@/components/custom/dashboard-sidebar'
 import CustomTourProvider from '@/components/custom/tour/tour-provider'
@@ -15,6 +16,7 @@ export default function MainLayout() {
                     </div>
                 </div>
             </div>
+            <DashboardChecklistModal />
         </CustomTourProvider>
     )
 }

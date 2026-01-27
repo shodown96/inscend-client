@@ -17,6 +17,7 @@ import { API_ENDPOINTS, APP_NAME, PATHS } from "@/lib/constants"
 import { useActionBoardStore } from "@/lib/stores/action-board"
 import { useAuthStore } from "@/lib/stores/auth"
 import { useBusinessDataStore, type BusinessData } from "@/lib/stores/business"
+import { useChecklistStore } from "@/lib/stores/checklist"
 import { useProductStore } from "@/lib/stores/product"
 import type { GenerateActionCardResult } from "@/types/action-board"
 import { ArrowRight, RefreshCw } from "lucide-react"
@@ -34,6 +35,7 @@ export default function ActionBoardPage() {
     const initHasRun = useRef(false)
     const [loading, setLoading] = useState(false)
     const { user } = useAuthStore()
+    const { isChecklistMinimized } = useChecklistStore()
     const { products, setProducts } = useProductStore()
     const { businessData, setBusinessData } = useBusinessDataStore()
     const { actionCardResult, setActionCardResult, setAffectedProducts } = useActionBoardStore()
@@ -45,7 +47,7 @@ export default function ActionBoardPage() {
     })
 
     const navigate = useNavigate()
-    useAppTour('overview', !loading)
+    useAppTour('overview', !loading && isChecklistMinimized)
 
     const fetchProducts = async () => {
         console.log("Fetching Products")
@@ -188,7 +190,7 @@ export default function ActionBoardPage() {
                     <div className="flex gap-2">
                         <ProductModal buttonText={`Add ${products.length ? '' : 'your first'} product`} />
                         <Button onClick={getFullBusinessData} className="w-max"><RefreshCw />
-                        Refresh cards
+                            Refresh cards
                         </Button>
                     </div>
                 </div>
@@ -198,13 +200,22 @@ export default function ActionBoardPage() {
                     {view === 'Action card' ? (
                         <>
                             {actionCardResult?.total_cards ? (
-                                <div className="grid grid-cols-12 gap-4 h-[60vh]-overflow-auto pb-4">
+                                <>
+                                    <div className="max-md:hidden grid grid-cols-12 gap-4 h-[60vh]-overflow-auto pb-4">
+                                        {actionCardResult.cards.map(v => (
+                                            <div key={v.card_id} className="col-span-12 md:col-span-6 xl:col-span-4" >
+                                                <ActionCardItem item={v} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="md:hidden flex gap-4 overflow-x-scroll pb-4">
                                     {actionCardResult.cards.map(v => (
-                                        <div key={v.card_id} className="col-span-12 md:col-span-6 xl:col-span-4" >
+                                        <div key={v.card_id} className="w-[300px]!" >
                                             <ActionCardItem item={v} />
                                         </div>
                                     ))}
                                 </div>
+                                </>
                             ) : (
                                 <>
                                     <div className="bg-white rounded p-3 py-10 flex flex-col gap-4 justify-center items-center text-center mb-4">

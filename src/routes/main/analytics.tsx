@@ -63,7 +63,7 @@ export default function AnalyticsPage() {
         <Loader loading={loading}>
             <div className="p-10">
                 <title>{`Analytics | ${APP_NAME}`}</title>
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between md:items-center mb-4 gap-4 max-md:flex-col">
                     <div>
                         <h4 className="font-semibold text-xl">Business Health Check</h4>
                         <p className="text-sm">Here's what's happening with your business.</p>

@@ -11,13 +11,14 @@ import SsoCallback from "./routes/auth/sso-callback";
 import Home from "./routes/home";
 
 import { PATHS } from "./lib/constants";
+import Onboarding from "./routes/auth/onboarding";
+import ActionBoardPage from "./routes/main/action-board";
 import Analytics from "./routes/main/analytics";
 import Customers from "./routes/main/customers";
-import ActionBoardPage from "./routes/main/action-board";
+import CustomerDetailsPage from "./routes/main/customers/[id]";
 import Inventory from "./routes/main/inventory";
 import Sales from "./routes/main/sales";
 import Settings from "./routes/main/settings";
-import CustomerDetailsPage from "./routes/main/customers/[id]";
 
 export default function AppRoutes() {
     return (
@@ -32,6 +33,7 @@ export default function AppRoutes() {
                     <Route path={PATHS.SIGN_UP} element={<SignUp />} />
                     <Route path={PATHS.FORGOT_PASSWORD} element={<ForgotPassword />} />
                     <Route path={PATHS.SETUP_BUSINESS} element={<SetupBusiness />} />
+                    <Route path={PATHS.ONBOARDING} element={<Onboarding />} />
                     <Route path={PATHS.SSO_CALLBACK} element={<SsoCallback />} />
                 </Route>
 

@@ -30,8 +30,8 @@ function Ring({ value }: { value: number }) {
     const dash = (v / 100) * c;
 
     return (
-        <div className="relative h-12 w-12 shrink-0">
-            <svg viewBox="0 0 48 48" className="h-12 w-12">
+        <div className="relative size-20 shrink-0">
+            <svg viewBox="0 0 48 48" className="size-20">
                 <circle
                     cx="24"
                     cy="24"
@@ -147,7 +147,7 @@ function ActionRow({
 
             <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center md:justify-end">
                 <Button
-                    className="w-full rounded-xl bg-slate-900 text-white hover:bg-slate-800 md:w-auto"
+                    className="w-full bg-slate-900 text-white hover:bg-slate-800 md:w-auto"
                     size="sm"
                     onClick={onPrimary}
                 >

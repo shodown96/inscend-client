@@ -34,3 +34,12 @@ export const PAYMENT_METHODS = [
     { label: "Card", value: "Card" },
     { label: "Cash", value: "Cash" },
 ]
+
+export const TODO_IDS = {
+  IMPORT_PRODUCTS: "IMPORT_PRODUCTS",
+  IMPORT_CUSTOMERS: "IMPORT_CUSTOMERS",
+  IMPORT_SALES: "IMPORT_SALES",
+  IMPORT_SHOPIFY_DATA: "IMPORT_SHOPIFY_DATA",
+} as const
+
+export type TODO_TYPE = keyof typeof TODO_IDS

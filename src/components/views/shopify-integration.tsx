@@ -8,6 +8,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import IntegrationItem from "../custom/integration-item"
 import { Button } from "../ui/button"
+
 export default function ShopifyIntegration() {
     const [shop, setShop] = useState("")
     const [loading, setLoading] = useState(false)

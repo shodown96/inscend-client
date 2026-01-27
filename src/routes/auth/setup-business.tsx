@@ -22,7 +22,7 @@ export default function SetupBusinessPage() {
                 if (user) {
                     setUser({ ...user, businessId: business.id, business });
                 }
-                const PATH = searchParams.get("nextURL") || PATHS.ACTION_BOARD
+                const PATH = searchParams.get("nextURL") || PATHS.ONBOARDING
                 navigate(PATH);
             } else {
                 toast.error(result.data.message)

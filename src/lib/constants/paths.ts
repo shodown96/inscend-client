@@ -7,6 +7,7 @@ export const PATHS = {
     SETUP_BUSINESS: "/setup-business",
     LANDING: "/",
     HOME: "/",
+    PRIVACY_POLICY: "/privacy-policy",
     INVENTORY: "/inventory",
     SALES: "/sales",
     CUSTOMERS: "/customers",

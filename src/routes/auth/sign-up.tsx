@@ -31,7 +31,7 @@ export default function SignUpPage() {
                 setTokens({ accessToken })
                 const nextURL = searchParams.get("nextURL")
                 if (nextURL) {
-                    navigate(`${PATHS.SETUP_BUSINESS}?nextURL=${searchParams.get("nextURL")}`);
+                    navigate(`${PATHS.SETUP_BUSINESS}?nextURL=${searchParams.get("nextURL") || ""}`);
                 } else {
                     navigate(PATHS.SETUP_BUSINESS);
                 }
